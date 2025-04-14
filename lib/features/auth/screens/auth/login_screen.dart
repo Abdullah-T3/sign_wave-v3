@@ -138,9 +138,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: deviceInfo.screenHeight * 0.3,
                           decoration: BoxDecoration(
                             color: ColorsManager.primaryGridColor,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                deviceInfo.screenWidth * 0.1,
+                              ),
+                              bottomRight: Radius.circular(
+                                deviceInfo.screenWidth * 0.1,
+                              ),
                             ),
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -194,7 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                      borderRadius: BorderRadius.circular(
+                                        deviceInfo.screenWidth * 0.1,
+                                      ),
                                     ),
                                   ),
                                   child: Padding(

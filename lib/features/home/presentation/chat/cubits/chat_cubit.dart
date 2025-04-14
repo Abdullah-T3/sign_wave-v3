@@ -148,7 +148,19 @@ class ChatCubit extends Cubit<ChatState> {
         .listen(
           (status) {
             final isOnline = status["isOnline"] as bool;
-            final lastSeen = status["lastSeen"] as Timestamp?;
+            final lastSeenData = status["lastSeen"];
+            Timestamp? lastSeen;
+
+            if (lastSeenData is Timestamp) {
+              lastSeen = lastSeenData;
+            } else if (lastSeenData is String) {
+              try {
+                lastSeen = Timestamp.fromDate(DateTime.parse(lastSeenData));
+              } catch (e) {
+                print("Error parsing lastSeen timestamp: $e");
+                lastSeen = null;
+              }
+            }
 
             emit(
               state.copyWith(

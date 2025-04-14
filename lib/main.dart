@@ -13,10 +13,17 @@ import 'features/auth/screens/auth/login_screen.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> _initializeApp() async {
   await Firebase.initializeApp();
   await setupServiceLocator();
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initializeApp().timeout(
+    const Duration(seconds: 5),
+    onTimeout: () => throw Exception('App initialization timed out'),
+  );
   runApp(const MyApp());
 }
 
@@ -33,27 +40,28 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    _initializeLifecycleObserver();
+  }
 
-    // Initialize _lifeCycleObserver with a default value if needed
+  void _initializeLifecycleObserver() {
+    // Initialize with empty user ID initially
     _lifeCycleObserver = AppLifeCycleObserver(
-      userId: '', // Provide a default empty userId
+      userId: '',
       chatRepository: getIt<ChatRepository>(),
     );
 
-    // Listen for changes in AuthCubit state
+    // Add observer immediately
+    WidgetsBinding.instance.addObserver(_lifeCycleObserver);
+
+    // Listen for auth state changes
     getIt<AuthCubit>().stream.listen((state) {
       if (state.status == AuthStatus.authenticated && state.user != null) {
-        // Update _lifeCycleObserver only if authenticated
-        setState(() {
-          _lifeCycleObserver = AppLifeCycleObserver(
-            userId: state.user!.uid,
-            chatRepository: getIt<ChatRepository>(),
-          );
-        });
+        _lifeCycleObserver = AppLifeCycleObserver(
+          userId: state.user!.uid,
+          chatRepository: getIt<ChatRepository>(),
+        );
+        WidgetsBinding.instance.addObserver(_lifeCycleObserver);
       }
-
-      // Add the observer to WidgetsBinding once it's initialized
-      WidgetsBinding.instance.addObserver(_lifeCycleObserver);
     });
   }
 
