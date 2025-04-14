@@ -156,6 +156,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                             "Online",
                             style: TextStyles.title.copyWith(
                               color: Colors.green,
+                              fontSize: deviceInfo.screenWidth * 0.037,
                             ),
                           );
                         }

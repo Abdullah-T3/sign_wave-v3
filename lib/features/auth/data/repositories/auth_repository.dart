@@ -25,7 +25,9 @@ class AuthRepository extends BaseRepository {
           "An account with the same phone number already exists.",
         );
       }
-
+      if (await checkUserExists(username)) {
+        throw Exception("An account with the same username already exists.");
+      }
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -62,6 +64,20 @@ class AuthRepository extends BaseRepository {
       password: password,
     );
     return userCredential.user!;
+  }
+
+  Future<bool> checkUserExists(String username) async {
+    try {
+      var querySnapshot =
+          await firestore
+              .collection("users")
+              .where("username", isEqualTo: username)
+              .get();
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      log("Error checking username existence: ${e.toString()}");
+      return false;
+    }
   }
 
   Future<bool> checkEmailExists(String email) async {

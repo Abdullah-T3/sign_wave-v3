@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
 import 'package:sign_wave_v3/core/theming/styles.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
+import 'package:animations/animations.dart';
 
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
@@ -191,7 +192,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            body: _getBody(deviceInfo),
+            body: PageTransitionSwitcher(
+              transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+                return FadeThroughTransition(
+                  animation: primaryAnimation,
+                  secondaryAnimation: secondaryAnimation,
+                  child: child,
+                );
+              },
+              child: _getBody(deviceInfo),
+            ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _selectedIndex,
               onTap: (index) {
