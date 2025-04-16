@@ -16,7 +16,7 @@ import 'package:sign_wave_v3/firebase_options.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/home/data/repo/chat_repository.dart';
 import '../../features/home/data/repo/contact_repository.dart';
-import '../../features/auth/logic/auth/auth_cubit.dart';
+import '../../features/auth/cubit/auth_cubit.dart';
 import '../../router/app_router.dart';
 // Add these imports
 import 'call_notification_service.dart';

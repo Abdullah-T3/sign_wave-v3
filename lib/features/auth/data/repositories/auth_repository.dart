@@ -153,6 +153,13 @@ class AuthRepository extends BaseRepository {
 
   Future<void> signOut() async {
     try {
+      final currentUser = auth.currentUser;
+      if (currentUser != null) {
+        await firestore.collection("users").doc(currentUser.uid).update({
+          'fcmToken': '',
+        });
+      }
+      await FirebaseMessaging.instance.deleteToken();
       await auth.signOut();
     } catch (e) {
       log('SignOut Error: ${e.toString()}');

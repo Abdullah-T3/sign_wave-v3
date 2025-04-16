@@ -8,7 +8,7 @@ import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
 import '../../data/repo/contact_repository.dart';
 import '../../../../../core/services/di.dart';
-import '../../../auth/logic/auth/auth_cubit.dart';
+import '../../../auth/cubit/auth_cubit.dart';
 import '../../../auth/screens/auth/login_screen.dart';
 import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';

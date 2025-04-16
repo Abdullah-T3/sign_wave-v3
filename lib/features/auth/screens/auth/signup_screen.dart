@@ -10,8 +10,8 @@ import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
 import '../../../../core/theming/colors.dart';
-import '../../logic/auth/auth_cubit.dart';
-import '../../logic/auth/auth_state.dart';
+import '../../cubit/auth_cubit.dart';
+import '../../cubit/auth_state.dart';
 import '../../../home/presentation/home/home_screen.dart';
 import '../../../../../router/app_router.dart';
 
