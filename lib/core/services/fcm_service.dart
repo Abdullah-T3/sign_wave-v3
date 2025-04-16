@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sign_wave_v3/core/helper/dotenv/dot_env_helper.dart';
 import 'package:sign_wave_v3/core/services/di.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 
 Dio dio = getIt<Dio>();
+EnvHelper dotenvHelper = EnvHelper();
 
 class FcmService {
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -54,8 +56,9 @@ Future<Response> sendNotification({
   required Map<String, String> data,
 }) async {
   final String accessToken = await getAccessToken();
+  final String appID = EnvHelper.getString('report_Base_url');
   final String fcmUrl =
-      'https://fcm.googleapis.com/v1/projects/sign-language-translator-11862/messages:send';
+      'https://fcm.googleapis.com/v1/projects/$appID/messages:send';
 
   // final response = await http.post(
   //   Uri.parse(fcmUrl),

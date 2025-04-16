@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sign_wave_v3/core/helper/dotenv/dot_env_helper.dart';
 import 'package:sign_wave_v3/core/services/jitsi_call.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
@@ -29,6 +31,8 @@ Future<void> setupServiceLocator() async {
   final messaging = FirebaseMessaging.instance;
   dynamic firebaseToken = await messaging.getToken();
   print('notification status ${firebaseToken.toString()}');
+
+  //-------------------------------------------------//
   getIt.registerLazySingleton<Dio>(() => dio);
   getIt.registerLazySingleton(() => AppRouter());
   getIt.registerLazySingleton<FirebaseFirestore>(
