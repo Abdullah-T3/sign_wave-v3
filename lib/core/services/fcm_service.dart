@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sign_wave_v3/core/services/di.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart' as auth;
 
 Dio dio = getIt<Dio>();
