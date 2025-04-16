@@ -25,6 +25,16 @@ class FirebaseAuthErrorHandler {
         return 'The credential is malformed or has expired.';
       case 'account-exists-with-different-credential':
         return 'An account already exists with the same email address but different sign-in credentials.';
+      case 'invalid-verification-code':
+        return 'The verification code is invalid.';
+      case 'invalid-verification-id':
+        return 'The verification ID is invalid.';
+      case 'invalid-action-code':
+        return 'The action code is invalid.';
+      case 'invalid-continue-uri':
+        return 'The continue URI is invalid.';
+      case 'invalid-dynamic-link-domain':
+        return 'The dynamic link domain is invalid.';
       default:
         return 'An error occurred: ${error.message}';
     }

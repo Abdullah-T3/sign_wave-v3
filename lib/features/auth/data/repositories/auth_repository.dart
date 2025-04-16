@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sign_wave_v3/core/services/di.dart';
 import '../models/user_model.dart';
 import '../../../../../core/services/base_repository.dart';
+import '../../../../../core/error/firebase_auth_error_handling.dart';
 
 class AuthRepository extends BaseRepository {
   Stream<User?> get authStateChanges => auth.authStateChanges();
@@ -39,19 +42,26 @@ class AuthRepository extends BaseRepository {
       } else if (firebaseUser != null || !firebaseUser.emailVerified) {
         await firebaseUser.sendEmailVerification();
       }
-
+      var fcmToken = await FirebaseMessaging.instance.getToken();
       UserModel user = UserModel(
         uid: firebaseUser.uid,
         username: username,
         fullName: fullName,
         email: email,
         phoneNumber: formattedPhoneNumber,
+        fcmToken: fcmToken,
       );
       await saveUserData(user);
       return user;
     } catch (e) {
       log('SignUp Error: ${e.toString()}');
-      rethrow;
+      if (e is FirebaseAuthException) {
+        throw Exception(FirebaseAuthErrorHandler.handleError(e));
+      } else if (e is Exception) {
+        throw Exception(FirebaseAuthErrorHandler.handleGeneralError(e));
+      } else {
+        throw Exception("Failed to create user account.");
+      }
     }
   }
 
@@ -160,6 +170,25 @@ class AuthRepository extends BaseRepository {
     } catch (e) {
       log('GetUserData Error: ${e.toString()}');
       rethrow;
+    }
+  }
+
+  Future sendPasswordResetEmail(String email) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      log('SendPasswordResetEmail Error: ${e.toString()}');
+      throw Exception("Failed to send password reset email.");
+    }
+  }
+
+  Future<String> getFcmToken() async {
+    try {
+      String fcmToken = await getIt<FirebaseMessaging>().getToken() ?? "";
+      return fcmToken;
+    } catch (e) {
+      log('GetFcmToken Error: ${e.toString()}');
+      throw Exception("Failed to get FCM token.");
     }
   }
 

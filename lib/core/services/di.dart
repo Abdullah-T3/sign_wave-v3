@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sign_wave_v3/core/services/jitsi_call.dart';
+import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
 import 'package:sign_wave_v3/firebase_options.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
@@ -22,10 +24,19 @@ Future<void> setupServiceLocator() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance
       .setForegroundNotificationPresentationOptions();
-
+  await NotificationService().initNotification();
+  Dio dio = Dio();
+  final messaging = FirebaseMessaging.instance;
+  dynamic firebaseToken = await messaging.getToken();
+  print('notification status ${firebaseToken.toString()}');
+  getIt.registerLazySingleton<Dio>(() => dio);
   getIt.registerLazySingleton(() => AppRouter());
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
+  );
+  getIt.registerLazySingleton<String>(
+    () => firebaseToken.toString(),
+    instanceName: 'firebaseToken',
   );
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => AuthRepository());

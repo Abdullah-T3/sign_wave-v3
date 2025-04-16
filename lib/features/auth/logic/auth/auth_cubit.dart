@@ -64,6 +64,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _authRepository.getUserData(userCredential.uid);
       emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (e) {
+      print(e.toString());
       emit(state.copyWith(status: AuthStatus.error, error: e.toString()));
     }
   }
@@ -98,6 +99,16 @@ class AuthCubit extends Cubit<AuthState> {
       await _authRepository.signOut();
       print(getIt<AuthRepository>().currentUser?.uid ?? "asasa");
       emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
+    } catch (e) {
+      emit(state.copyWith(status: AuthStatus.error, error: e.toString()));
+    }
+  }
+
+  Future<void> sendPasswordReset(String email) async {
+    try {
+      await _authRepository.sendPasswordResetEmail(email);
+
+      emit(state.copyWith(status: AuthStatus.passwordResetEmailSent));
     } catch (e) {
       emit(state.copyWith(status: AuthStatus.error, error: e.toString()));
     }

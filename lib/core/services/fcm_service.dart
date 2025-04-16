@@ -1,190 +1,116 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sign_wave_v3/core/services/di.dart';
+import 'package:sign_wave_v3/core/services/notifcation_service.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:googleapis_auth/auth_io.dart' as auth;
 
-class FCMService {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+Dio dio = getIt<Dio>();
 
-  // Channel ID or Android notifications
-  static const String _channelId = 'sign_wave_channel';
-  static const String _channelName = 'Sign Wave Notifications';
-  static const String _channelDescription =
-      'Notifications for Sign Wave Translator app';
+class FcmService {
+  static Future<void> firebaseMessagingBackgroundHandler(
+    RemoteMessage message,
+  ) async {
+    print('Handling a background message: ${message.messageId}');
+    NotificationService().showNotification(
+      title: '${message.notification!.title.toString()}',
+      body: '${message.notification!.body}',
+    );
+  }
 
-  Future<void> initialize({
-    required Function(RemoteMessage) onMessageOpenedApp,
-    required Function(RemoteMessage) onMessage,
-    required Function(String) onTokenRefresh,
-  }) async {
-    // Request permission for iOS
-    if (Platform.isIOS) {
-      await _firebaseMessaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    }
-
-    // Initialize local notifications
-    await _initializeLocalNotifications();
-
-    // Get FCM token
-    String? token = await _firebaseMessaging.getToken();
-    if (token != null) {
-      debugPrint('FCM Token: $token');
-      onTokenRefresh(token);
-    }
-
-    // Listen for token refresh
-    _firebaseMessaging.onTokenRefresh.listen((newToken) {
-      debugPrint('FCM Token refreshed: $newToken');
-      onTokenRefresh(newToken);
-    });
-
-    // Handle background messages
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Handle messages when app is in foreground
+  static void onForgroundMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Got a message whilst in the foreground!');
-      debugPrint('Message data: ${message.data}');
-
       if (message.notification != null) {
-        debugPrint(
-          'Message also contained a notification: ${message.notification}',
+        print('Message received: ${message.notification!.title}');
+        print('Message body: ${message.notification!.body}');
+        NotificationService().showNotification(
+          title: '${message.notification!.title.toString()}',
+          body: '${message.notification!.body}',
         );
-        _showLocalNotification(message);
       }
-
-      onMessage(message);
     });
-
-    // Handle when app is opened from a notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('A new onMessageOpenedApp event was published!');
-      onMessageOpenedApp(message);
-    });
-
-    // Check if app was opened from a notification
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      debugPrint('App opened from terminated state via notification');
-      onMessageOpenedApp(initialMessage);
-    }
-  }
-
-  // Initialize local notifications
-  Future<void> _initializeLocalNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    final DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-          requestSoundPermission: true,
-          requestBadgePermission: true,
-          requestAlertPermission: true,
-          // Remove the problematic parameter
-        );
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: initializationSettingsIOS,
-        );
-
-    await _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        // Handle notification tap
-        if (response.payload != null) {
-          final Map<String, dynamic> data = json.decode(response.payload!);
-          debugPrint('Notification payload: $data');
-        }
-      },
-    );
-
-    // Create Android notification channel
-    final AndroidNotificationChannel channel = AndroidNotificationChannel(
-      _channelId,
-      _channelName,
-      description: _channelDescription,
-      importance: Importance.high,
-    );
-
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(channel);
-  }
-
-  // Show local notification
-  Future<void> _showLocalNotification(RemoteMessage message) async {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-
-    if (notification != null && android != null && !kIsWeb) {
-      _flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
-            icon: android.smallIcon ?? '@mipmap/ic_launcher',
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-          iOS: const DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        payload: json.encode(message.data),
-      );
-    }
-  }
-
-  // Subscribe to a topic
-  Future<void> subscribeToTopic(String topic) async {
-    await _firebaseMessaging.subscribeToTopic(topic);
-    debugPrint('Subscribed to topic: $topic');
-  }
-
-  // Unsubscribe from a topic
-  Future<void> unsubscribeFromTopic(String topic) async {
-    await _firebaseMessaging.unsubscribeFromTopic(topic);
-    debugPrint('Unsubscribed from topic: $topic');
-  }
-
-  // Get FCM token
-  Future<String?> getToken() async {
-    return await _firebaseMessaging.getToken();
-  }
-
-  // Delete FCM token
-  Future<void> deleteToken() async {
-    await _firebaseMessaging.deleteToken();
-    debugPrint('FCM Token deleted');
   }
 }
 
-// Background message handler
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Need to initialize Firebase here
-  await Firebase.initializeApp();
+Future<String> getAccessToken() async {
+  final jsonString = await rootBundle.loadString(
+    'assets/sign-language-translator-11862-35aa83c7dc44.json',
+  );
 
-  debugPrint('Handling a background message: ${message.messageId}');
-  // You can't show UI (notifications) in the background handler
+  final accountCredentials = auth.ServiceAccountCredentials.fromJson(
+    jsonString,
+  );
+
+  final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+  final client = await auth.clientViaServiceAccount(accountCredentials, scopes);
+
+  return client.credentials.accessToken.data;
+}
+
+Future<Response> sendNotification({
+  required String token,
+  required String title,
+  required String body,
+  required Map<String, String> data,
+}) async {
+  final String accessToken = await getAccessToken();
+  final String fcmUrl =
+      'https://fcm.googleapis.com/v1/projects/sign-language-translator-11862/messages:send';
+
+  // final response = await http.post(
+  //   Uri.parse(fcmUrl),
+  //   headers: <String, String>{
+  //     'Content-Type': 'application/json',
+  //     'Authorization': 'Bearer $accessToken',
+  //   },
+  //   body: jsonEncode(<String, dynamic>{
+  //     'message': {
+  //       'token': token,
+  //       'notification': {'title': title, 'body': body},
+  //       'data': data,
+
+  //       'android': {
+  //         'notification': {
+  //           'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+  //           'channel_id': 'high_importance_channel',
+  //         },
+  //       },
+  //       'apns': {
+  //         'payload': {
+  //           'aps': {"sound": "custom_sound.caf", 'content-available': 1},
+  //         },
+  //       },
+  //     },
+  //   }),
+  // );
+  final response = await dio.post(
+    fcmUrl,
+    options: Options(
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    ),
+    data: {
+      'message': {
+        'token': token,
+        'notification': {'title': title, 'body': body},
+        'data': data,
+        'android': {
+          'notification': {
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'channel_id': 'high_importance_channel',
+          },
+        },
+        'apns': {
+          'payload': {
+            'aps': {"sound": "custom_sound.caf", 'content-available': 1},
+          },
+        },
+      },
+    },
+  );
+  return response;
 }

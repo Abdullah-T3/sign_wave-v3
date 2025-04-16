@@ -9,6 +9,7 @@ enum AuthStatus {
   unauthenticated,
   emailUnverified,
   error,
+  passwordResetEmailSent,
 }
 
 class AuthState extends Equatable {

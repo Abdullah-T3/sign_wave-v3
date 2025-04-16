@@ -2,41 +2,34 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
-import 'package:sign_wave_v3/features/auth/screens/auth/forgot_password_screen.dart';
+
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
 import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
-import '../../../../core/services/fcm_service.dart' show sendNotification;
 import '../../../../core/theming/colors.dart';
 import '../../logic/auth/auth_cubit.dart';
 import '../../logic/auth/auth_state.dart';
-import '../../../home/presentation/home/home_screen.dart';
-import 'signup_screen.dart';
 import '../../../../../router/app_router.dart';
+import 'login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final _emailFocus = FocusNode();
-  final _passwordFocus = FocusNode();
 
-  bool _isPasswordVisible = false;
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     _emailFocus.dispose();
-    _passwordFocus.dispose();
     super.dispose();
   }
 
@@ -51,32 +44,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  // Password validation
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null;
-  }
-  /*************  ✨ Codeium Command ⭐  *************/
-  /// Validates the form and if valid, attempts to sign in the user
-  /// using the provided email and password. If the sign in fails, it
-  /// will show an error toast to the user.
-  ///
-  /// If the form is invalid, it will print a message to the console.
-  /******  fbc7552c-da33-44b2-8a79-bc801e9a81bc  *******/
-
-  Future<void> handleSignIn(DeviceInfo deviceInfo, BuildContext context) async {
+  Future<void> handleResetPassword(
+    DeviceInfo deviceInfo,
+    BuildContext context,
+  ) async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        await getIt<AuthCubit>().signIn(
-          email: emailController.text,
-          password: passwordController.text,
-        );
+        await getIt<AuthCubit>().sendPasswordReset(emailController.text);
       } catch (e) {
         CherryToastMsgs.CherryToastError(
           info: deviceInfo,
@@ -91,22 +66,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return InfoWidget(
       builder: (context, deviceInfo) {
         return BlocConsumer<AuthCubit, AuthState>(
           bloc: getIt<AuthCubit>(),
           listener: (context, state) {
-            print("state.status: ${state.status}");
-            if (state.status == AuthStatus.authenticated) {
+            if (state.status == AuthStatus.passwordResetEmailSent) {
               CherryToastMsgs.CherryToastSuccess(
                 info: deviceInfo,
                 context: context,
                 title: "Success",
-                description: "Logged in successfully",
+                description:
+                    "Password reset email sent. Please check your inbox.",
               ).show(context);
-              getIt<AppRouter>().pushAndRemoveUntil(const HomeScreen());
+              // Navigate back to login screen after a short delay
+              Future.delayed(const Duration(seconds: 2), () {
+                getIt<AppRouter>().pushReplacement(const LoginScreen());
+              });
             } else if (state.status == AuthStatus.error &&
                 state.error != null) {
               CherryToastMsgs.CherryToastError(
@@ -114,20 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 context: context,
                 title: "Error",
                 description: "${state.error}",
-              ).show(context);
-            } else if (state.status == AuthStatus.emailUnverified) {
-              CherryToastMsgs.CherryToastVerified(
-                info: deviceInfo,
-                context: context,
-                title: "Verification Required",
-                description: "Please verify your email first",
-              ).show(context);
-            } else if (state.status == AuthStatus.passwordResetEmailSent) {
-              CherryToastMsgs.CherryToastSuccess(
-                info: deviceInfo,
-                context: context,
-                title: "Success",
-                description: "Password reset email sent",
               ).show(context);
             }
           },
@@ -165,12 +128,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Stack(
                             children: [
-                              // Title: "Sign In"
+                              // Title: "Reset Password"
+                              Positioned(
+                                top: deviceInfo.screenHeight * 0.02,
+                                child: IconButton(
+                                  onPressed: () => getIt<AppRouter>().pop(),
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Sign In",
+                                  "Reset Password",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.08,
@@ -179,12 +153,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
 
-                              // Subtitle: "Welcome Back to Sign Wave"
+                              // Subtitle: "We'll send you a reset link"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.18,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Welcome Back to\nSign Wave",
+                                  "We'll send you a reset link\nto your email",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.05,
@@ -193,14 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
 
-                              // "Sign Up" Button
+                              // "Back to Login" Button
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
                                 right: deviceInfo.screenWidth * 0.05,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     getIt<AppRouter>().pushReplacement(
-                                      const SignupScreen(),
+                                      const LoginScreen(),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -217,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       vertical: deviceInfo.screenHeight * 0.01,
                                     ),
                                     child: Text(
-                                      "Sign Up",
+                                      "Login",
                                       style: TextStyle(
                                         color: Colors.blue.shade600,
                                         fontSize: deviceInfo.screenWidth * 0.04,
@@ -241,6 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Column(
                             children: [
+                              // Email field
                               CustomTextField(
                                 controller: emailController,
                                 hintText: "Email",
@@ -248,69 +223,51 @@ class _LoginScreenState extends State<LoginScreen> {
                                 validator: _validateEmail,
                                 prefixIcon: const Icon(Icons.email_outlined),
                               ),
+
                               SizedBox(height: deviceInfo.screenHeight * 0.03),
-                              // Add this after the password field and before the login button
-                              CustomTextField(
-                                controller: passwordController,
-                                focusNode: _passwordFocus,
-                                validator: _validatePassword,
-                                hintText: "Password",
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                obscureText: !_isPasswordVisible,
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
+
+                              // Instructions text
+                              Text(
+                                "Enter the email address associated with your account. We'll send you a link to reset your password.",
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: deviceInfo.screenWidth * 0.04,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    getIt<AppRouter>().push(
-                                      const ForgotPasswordScreen(),
-                                    );
-                                  },
-                                  child: Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
+
                               SizedBox(height: deviceInfo.screenHeight * 0.1),
+
+                              // Reset Password Button
                               CustomButton(
                                 onPressed:
-                                    () => handleSignIn(deviceInfo, context),
-                                text: 'Login',
+                                    () => handleResetPassword(
+                                      deviceInfo,
+                                      context,
+                                    ),
+                                text: 'Send Reset Link',
                                 child:
                                     state.status == AuthStatus.loading
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
                                         : const Text(
-                                          "Login",
+                                          "Send Reset Link",
                                           style: TextStyle(color: Colors.white),
                                         ),
                               ),
+
                               SizedBox(height: deviceInfo.screenHeight * 0.02),
+
+                              // Back to login link
                               Center(
                                 child: RichText(
                                   text: TextSpan(
-                                    text: "Don't have an account?  ",
+                                    text: "Remember your password? ",
                                     style: TextStyle(color: Colors.grey[600]),
                                     children: [
                                       TextSpan(
-                                        text: "Sign up",
+                                        text: "Login",
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
@@ -320,30 +277,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                         recognizer:
                                             TapGestureRecognizer()
                                               ..onTap = () {
-                                                getIt<AppRouter>().push(
-                                                  const SignupScreen(),
-                                                );
+                                                getIt<AppRouter>()
+                                                    .pushReplacement(
+                                                      const LoginScreen(),
+                                                    );
                                               },
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              MaterialButton(
-                                onPressed: () async {
-                                  await sendNotification(
-                                    body: "hi T3mia",
-                                    title: "Abdullah Ahmed",
-                                    token: getIt<String>(
-                                      instanceName: 'firebaseToken',
-                                    ),
-                                    data: {
-                                      "title": "Hello World",
-                                      "body": "Hi Abdullah",
-                                    },
-                                  );
-                                },
-                                child: Text("Send Notification"),
                               ),
                             ],
                           ),

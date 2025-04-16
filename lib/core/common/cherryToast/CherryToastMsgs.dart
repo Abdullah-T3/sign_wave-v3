@@ -49,4 +49,26 @@ class CherryToastMsgs {
       description: Text(description, style: TextStyle(color: Colors.white70)),
     );
   }
+
+  static CherryToast CherryToastVerified({
+    required DeviceInfo info,
+    required BuildContext context,
+    required String title,
+    required String description,
+    AnimationType animationType = AnimationType.fromTop,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    // Create the toast instance and return it
+    return CherryToast.error(
+      title: Text(title, style: TextStyle(color: Colors.white)),
+      toastDuration: duration,
+      borderRadius: info.screenWidth * 0.04,
+      backgroundColor: Colors.indigoAccent,
+      shadowColor: Colors.black45,
+      animationDuration: Duration(milliseconds: 300),
+      animationType: animationType,
+      autoDismiss: true,
+      description: Text(description, style: TextStyle(color: Colors.white70)),
+    );
+  }
 }

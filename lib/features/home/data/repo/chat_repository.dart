@@ -86,7 +86,6 @@ class ChatRepository extends BaseRepository {
 
     //add message to sub collection
     batch.set(messageDoc, message.toMap());
-
     //update chatroom
 
     batch.update(_chatRooms.doc(chatRoomId), {
