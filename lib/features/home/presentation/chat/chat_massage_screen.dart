@@ -55,6 +55,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
     await _chatCubit.sendMessage(
       content: messageText,
       receiverId: widget.receiverId,
+      receiverName: widget.receiverName,
     );
   }
 
