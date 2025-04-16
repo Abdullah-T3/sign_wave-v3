@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:sign_wave_v3/core/helper/dotenv/dot_env_helper.dart';
 import 'package:sign_wave_v3/core/services/di.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
-import 'package:flutter/services.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'dart:convert';
 
 Dio dio = getIt<Dio>();
 EnvHelper dotenvHelper = EnvHelper();
@@ -34,7 +35,9 @@ class FcmService {
   }
 }
 
+// In the getAccessToken function
 Future<String> getAccessToken() async {
+  // Load from a local file that is not tracked by git
   final jsonString = await rootBundle.loadString(
     'assets/sign-language-translator-11862-35aa83c7dc44.json',
   );
