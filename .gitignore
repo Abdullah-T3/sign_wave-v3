@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.swp
+*.env
 .DS_Store
 .atom/
 .build/
@@ -44,8 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Environment variables
-*.env
 # Google service account
 assets/sign-language-translator-11862-35aa83c7dc44.json
 secret

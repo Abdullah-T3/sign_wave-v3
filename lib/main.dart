@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'core/observer/app_life_cycle_observer.dart';
@@ -22,12 +23,12 @@ Future<void> _initializeApp() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // First initialize Firebase
   await _initializeApp().timeout(
     const Duration(seconds: 5),
     onTimeout: () => throw Exception('App initialization timed out'),
   );
+  await dotenv.load(fileName: ".env");
 
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,

@@ -39,7 +39,7 @@ class FcmService {
 Future<String> getAccessToken() async {
   // Load from a local file that is not tracked by git
   final jsonString = await rootBundle.loadString(
-    'assets/sign-language-translator-11862-35aa83c7dc44.json',
+    'secret/sign-language-translator-11862-28dfc8b4ee32.json',
   );
 
   final accountCredentials = auth.ServiceAccountCredentials.fromJson(
@@ -59,9 +59,9 @@ Future<Response> sendNotification({
   required Map<String, String> data,
 }) async {
   final String accessToken = await getAccessToken();
-  final String appID = EnvHelper.getString('report_Base_url');
+  final String appID = EnvHelper.getString('fbAppId');
   final String fcmUrl =
-      'https://fcm.googleapis.com/v1/projects/$appID/messages:send';
+      'https://fcm.googleapis.com/v1/projects/${appID}/messages:send';
 
   // final response = await http.post(
   //   Uri.parse(fcmUrl),
