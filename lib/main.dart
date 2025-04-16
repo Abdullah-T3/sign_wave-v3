@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'core/observer/app_life_cycle_observer.dart';
@@ -22,12 +23,12 @@ Future<void> _initializeApp() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // First initialize Firebase
   await _initializeApp().timeout(
     const Duration(seconds: 5),
     onTimeout: () => throw Exception('App initialization timed out'),
   );
+  await dotenv.load(fileName: ".env");
 
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,
@@ -47,6 +48,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late AppLifeCycleObserver _lifeCycleObserver;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -89,6 +91,8 @@ class _MyAppState extends State<MyApp> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        key: navigatorKey,
+        routes: {'/target': (context) => const HomeScreen()},
         title: 'Sign Wave Translator',
         navigatorKey: getIt<AppRouter>().navigatorKey,
         debugShowCheckedModeBanner: false,

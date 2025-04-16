@@ -10,7 +10,8 @@ class SlideTransitionWidget extends StatefulWidget {
 
 // how to use this widget
 // SlideTransitionWidget(child: yourWidget)
-class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with TickerProviderStateMixin {
+class _SlideTransitionWidgetState extends State<SlideTransitionWidget>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
   @override
@@ -25,10 +26,7 @@ class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with Tick
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
   }
 
@@ -43,10 +41,7 @@ class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with Tick
   Widget build(BuildContext context) {
     return SlideTransition(
       position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _animationController,
-        child: widget.child,
-      ),
+      child: FadeTransition(opacity: _animationController, child: widget.child),
     );
   }
 }
