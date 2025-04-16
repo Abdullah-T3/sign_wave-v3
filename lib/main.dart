@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
-import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'core/observer/app_life_cycle_observer.dart';
 import 'features/home/data/repo/chat_repository.dart';
 import 'core/services/di.dart';

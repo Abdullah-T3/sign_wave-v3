@@ -334,9 +334,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   await sendNotification(
                                     body: "hi T3mia",
                                     title: "Abdullah Ahmed",
-                                    token: getIt<String>(
-                                      instanceName: 'firebaseToken',
-                                    ),
+                                    token:
+                                        "egTeY8ERTi2R1zDShp585W:APA91bEy9hYvPPs36vXAFOC7cPDng2KWn_-8NRX3Mn2ICXtBQYdSl2QgECg4aq5o5KwP3IUFT5i1IVma6FAq2ZOlAPZlNudl7wBUiFy_Ll-oToaDdbl2GGY",
                                     data: {
                                       "title": "Hello World",
                                       "body": "Hi Abdullah",

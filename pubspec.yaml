@@ -70,7 +70,7 @@ flutter:
   assets:
     - assets/images/chats_Logo.png
     - assets/images/logo.png
-    - secret/sign-language-translator-11862-28dfc8b4ee32.json
+    - secret/sign-language-translator-11862-ff16840068c0.json
     - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
