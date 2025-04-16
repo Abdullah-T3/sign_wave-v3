@@ -48,3 +48,4 @@ app.*.map.json
 *.env
 # Google service account
 assets/sign-language-translator-11862-35aa83c7dc44.json
+secret
