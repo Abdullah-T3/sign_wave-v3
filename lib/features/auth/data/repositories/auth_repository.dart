@@ -42,14 +42,14 @@ class AuthRepository extends BaseRepository {
       } else if (firebaseUser != null || !firebaseUser.emailVerified) {
         await firebaseUser.sendEmailVerification();
       }
-      var fcmToken = await FirebaseMessaging.instance.getToken();
+      final fcmToken = getIt<String>(instanceName: 'firebaseToken');
       UserModel user = UserModel(
         uid: firebaseUser.uid,
         username: username,
         fullName: fullName,
         email: email,
         phoneNumber: formattedPhoneNumber,
-        fcmToken: fcmToken,
+        fcmToken: fcmToken.toString(),
       );
       await saveUserData(user);
       return user;
@@ -179,16 +179,6 @@ class AuthRepository extends BaseRepository {
     } catch (e) {
       log('SendPasswordResetEmail Error: ${e.toString()}');
       throw Exception("Failed to send password reset email.");
-    }
-  }
-
-  Future<String> getFcmToken() async {
-    try {
-      String fcmToken = await getIt<FirebaseMessaging>().getToken() ?? "";
-      return fcmToken;
-    } catch (e) {
-      log('GetFcmToken Error: ${e.toString()}');
-      throw Exception("Failed to get FCM token.");
     }
   }
 

@@ -52,7 +52,7 @@ Future<String> getAccessToken() async {
   return client.credentials.accessToken.data;
 }
 
-Future<Response> sendNotification({
+Future<void> sendNotification({
   required String token,
   required String title,
   required String body,
@@ -62,7 +62,6 @@ Future<Response> sendNotification({
   final String appID = EnvHelper.getString('fbAppId');
   final String fcmUrl =
       'https://fcm.googleapis.com/v1/projects/${appID}/messages:send';
-
   // final response = await http.post(
   //   Uri.parse(fcmUrl),
   //   headers: <String, String>{
@@ -116,5 +115,4 @@ Future<Response> sendNotification({
       },
     },
   );
-  return response;
 }

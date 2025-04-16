@@ -48,6 +48,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late AppLifeCycleObserver _lifeCycleObserver;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -90,6 +91,8 @@ class _MyAppState extends State<MyApp> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
+        key: navigatorKey,
+        routes: {'/target': (context) => const HomeScreen()},
         title: 'Sign Wave Translator',
         navigatorKey: getIt<AppRouter>().navigatorKey,
         debugShowCheckedModeBanner: false,

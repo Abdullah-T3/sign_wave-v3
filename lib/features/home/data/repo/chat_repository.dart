@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sign_wave_v3/core/services/base_repository.dart'
     show BaseRepository;
+import 'package:sign_wave_v3/core/services/fcm_service.dart'
+    show sendNotification;
+import '../../../../core/services/di.dart';
+import '../../../auth/data/repositories/auth_repository.dart';
 import '../model/chat_message.dart';
 import '../model/chat_room_model.dart';
 import '../../../auth/data/models/user_model.dart';
@@ -93,7 +97,23 @@ class ChatRepository extends BaseRepository {
       "lastMessageSenderId": senderId,
       "lastMessageTime": message.timestamp,
     });
-    await batch.commit();
+    getFcmToken(receiverId).then((fcmToken) async {
+      final userId = await getIt<AuthRepository>().currentUser!.uid;
+      final userData = await AuthRepository().getUserData(userId);
+      if (fcmToken != null) {
+        try {
+          sendNotification(
+            body: message.content,
+            token: fcmToken,
+            title: userData.fullName.toString(),
+            data: {'chatRoomId': chatRoomId, 'senderId': senderId},
+          );
+        } catch (e) {
+          debugPrint('Failed to send notification: $e');
+        }
+      }
+    });
+    Future.wait([batch.commit()]);
   }
 
   //a--> b
@@ -275,5 +295,11 @@ class ChatRepository extends BaseRepository {
       final userData = UserModel.fromFirestore(doc);
       return userData.blockedUsers.contains(currentUserId);
     });
+  }
+
+  Future<String> getFcmToken(String userId) async {
+    final userDoc = await firestore.collection("users").doc(userId).get();
+    final userData = userDoc.data() as Map<String, dynamic>;
+    return userData['fcmToken'] as String;
   }
 }
