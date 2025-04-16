@@ -32,6 +32,13 @@ class NotificationService {
             '/target',
           ); // Navigate to your desired screen
         }
+        //         final data = response.data;
+        // getIt<AppRouter>().pushReplacement(
+        //   ChatMessageScreen(
+        //     receiverId: data['receiverId'],
+        //     receiverName: data['receiverName'],
+        //   ),
+        // );
       },
     );
   }
