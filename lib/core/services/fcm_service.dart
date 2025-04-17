@@ -35,6 +35,21 @@ class FcmService {
 }
 
 // In the getAccessToken function
+Future<String> getAccessToken() async {
+  // Load from a local file that is not tracked by git
+  final jsonString = await rootBundle.loadString(
+    'secret/sign-language-translator-11862-1d331b021b72.json',
+  );
+
+  final accountCredentials = auth.ServiceAccountCredentials.fromJson(
+    jsonString,
+  );
+
+  final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+  final client = await auth.clientViaServiceAccount(accountCredentials, scopes);
+  print('Access Token: ${client.credentials.accessToken.data}');
+  return client.credentials.accessToken.data;
+}
 
 Future<void> sendNotification({
   required String token,
@@ -42,9 +57,8 @@ Future<void> sendNotification({
   required String body,
   required Map<String, String> data,
 }) async {
-  final String accessToken = getIt<String>(instanceName: 'accessToken');
+  final String accessToken = await getAccessToken();
   final String appID = EnvHelper.getString('fbAppId');
-  // Updated FCM URL format
   final String fcmUrl =
       'https://fcm.googleapis.com/v1/projects/$appID/messages:send';
   final response = await dio.post(
@@ -66,7 +80,6 @@ Future<void> sendNotification({
             'channel_id': 'high_importance_channel',
           },
         },
-
         'apns': {
           'payload': {
             'aps': {"sound": "custom_sound.caf", 'content-available': 1},

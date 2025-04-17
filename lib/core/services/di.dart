@@ -4,12 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:googleapis_auth/auth_io.dart' as auth;
-import 'package:sign_wave_v3/core/helper/dotenv/dot_env_helper.dart';
-import 'package:sign_wave_v3/core/services/jitsi_call.dart';
+import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
 import 'package:sign_wave_v3/firebase_options.dart';
@@ -32,8 +28,12 @@ Future<void> setupServiceLocator() async {
   Dio dio = Dio();
   final messaging = FirebaseMessaging.instance;
   dynamic firebaseToken = await messaging.getToken();
+  FirebaseMessaging.onBackgroundMessage(
+    FcmService.firebaseMessagingBackgroundHandler,
+  );
+  FcmService.onForgroundMessage();
   print('notification status ${firebaseToken.toString()}');
-  final String accessToken = await getAccessToken();
+
   //-------------------------------------------------//
   getIt.registerLazySingleton<Dio>(() => dio);
   getIt.registerLazySingleton(() => AppRouter());
@@ -44,10 +44,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<String>(
     () => firebaseToken.toString(),
     instanceName: 'firebaseToken',
-  );
-  getIt.registerLazySingleton<String>(
-    () => accessToken,
-    instanceName: 'accessToken',
   );
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => AuthRepository());
@@ -74,20 +70,4 @@ Future<void> setupServiceLocator() async {
 
   // Register JitsiMeetService with the injected JitsiMeet instance
   // getIt.registerLazySingleton(() => JitsiMeetService(getIt<JitsiMeet>()));
-}
-
-Future<String> getAccessToken() async {
-  // Load from a local file that is not tracked by git
-  final jsonString = await rootBundle.loadString(
-    'secret/sign-language-translator-11862-1d331b021b72.json',
-  );
-
-  final accountCredentials = auth.ServiceAccountCredentials.fromJson(
-    jsonString,
-  );
-
-  final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
-  final client = await auth.clientViaServiceAccount(accountCredentials, scopes);
-
-  return client.credentials.accessToken.data;
 }

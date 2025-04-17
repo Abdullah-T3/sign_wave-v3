@@ -133,8 +133,12 @@ class AuthRepository extends BaseRepository {
           fullName: "",
           phoneNumber: "",
           uid: "",
+          fcmToken: "",
         );
       } else {
+        await firestore.collection("users").doc(currentUser!.uid).update({
+          'fcmToken': getIt<String>(instanceName: 'firebaseToken'),
+        });
         return await getUserData(user.uid);
       }
     } catch (e) {

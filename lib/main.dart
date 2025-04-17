@@ -33,9 +33,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,
   );
-
   FcmService.onForgroundMessage();
-
   runApp(const MyApp());
 }
 

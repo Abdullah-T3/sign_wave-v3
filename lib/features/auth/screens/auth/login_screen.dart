@@ -329,22 +329,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                              MaterialButton(
-                                onPressed: () async {
-                                  await sendNotification(
-                                    body: "hi T3mia",
-                                    title: "Abdullah Ahmed",
-                                    token: getIt<String>(
-                                      instanceName: 'firebaseToken',
-                                    ),
-                                    data: {
-                                      "title": "Hello World",
-                                      "body": "Hi Abdullah",
-                                    },
-                                  );
-                                },
-                                child: Text("Send Notification"),
-                              ),
+                              // MaterialButton(
+                              //   onPressed: () async {
+                              //     await sendNotification(
+                              //       body: "hi T3mia",
+                              //       title: "Abdullah Ahmed",
+                              //       token: getIt<String>(
+                              //         instanceName: 'firebaseToken',
+                              //       ),
+                              //       data: {
+                              //         "title": "Hello World",
+                              //         "body": "Hi Abdullah",
+                              //       },
+                              //     );
+                              //   },
+                              //   child: Text("Send Notification"),
+                              // ),
                             ],
                           ),
                         ),
