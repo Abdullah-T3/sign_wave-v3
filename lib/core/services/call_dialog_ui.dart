@@ -1,5 +1,5 @@
 // // ignore_for_file: constant_identifier_names
-
+//
 // import 'dart:async';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -7,9 +7,8 @@
 // import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 // import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 // import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
-
+//
 // class CallKitService {
-//   // Show incoming call UI
 //   static Future<void> showIncomingCall({
 //     required String callId,
 //     required String callerName,
@@ -60,13 +59,13 @@
 //           ringtonePath: 'system_ringtone_default',
 //         ),
 //       );
-
+//
 //       await FlutterCallkitIncoming.showCallkitIncoming(params);
 //     } catch (e) {
 //       debugPrint('Error showing incoming call: $e');
 //     }
 //   }
-
+//
 //   // Show outgoing call UI
 //   static Future<void> startOutgoingCall({
 //     required String callId,
@@ -87,7 +86,7 @@
 //       debugPrint('Error starting outgoing call: $e');
 //     }
 //   }
-
+//
 //   // End an ongoing call
 //   static Future<void> endCall(String callId) async {
 //     try {
@@ -96,7 +95,7 @@
 //       debugPrint('Error ending call: $e');
 //     }
 //   }
-
+//
 //   // End all ongoing calls
 //   static Future<void> endAllCalls() async {
 //     try {
@@ -105,7 +104,7 @@
 //       debugPrint('Error ending all calls: $e');
 //     }
 //   }
-
+//
 //   // Listen for call events
 //   static Future<void> listenerForEvents({
 //     required Function(CallEvent) onEvent,
@@ -116,7 +115,7 @@
 //       debugPrint('Error setting up call event listener: $e');
 //     }
 //   }
-
+//
 //   // Get active calls
 //   static Future<List<dynamic>> getActiveCalls() async {
 //     try {
@@ -126,18 +125,18 @@
 //       return [];
 //     }
 //   }
-
+//
 //   // Initialize CallKit (especially important for iOS)
 // }
-
+//
 // // Class to handle call events
 // class CallEvent {
 //   final String name;
 //   final dynamic body;
 //   final dynamic headers;
-
+//
 //   CallEvent(this.name, this.body, this.headers);
-
+//
 //   bool get isCallAccepted => name == CallEvent.EVENT_ACTION_CALL_ACCEPT;
 //   bool get isCallDeclined => name == CallEvent.EVENT_ACTION_CALL_DECLINE;
 //   bool get isCallEnded => name == CallEvent.EVENT_ACTION_CALL_ENDED;
@@ -150,7 +149,7 @@
 //       name == CallEvent.EVENT_ACTION_CALL_TOGGLE_GROUP;
 //   bool get isCallToggleAudioSession =>
 //       name == CallEvent.EVENT_ACTION_CALL_TOGGLE_AUDIO_SESSION;
-
+//
 //   // Event name constants
 //   static const String EVENT_ACTION_CALL_INCOMING =
 //       'com.hiennv.flutter_callkit_incoming.ACTION_CALL_INCOMING';

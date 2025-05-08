@@ -8,7 +8,7 @@ import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
 import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
-import '../../../../core/services/fcm_service.dart' show sendNotification;
+import '../../../../core/services/fcm_service.dart';
 import '../../../../core/theming/colors.dart';
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
@@ -61,13 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
-  /*************  ✨ Codeium Command ⭐  *************/
-  /// Validates the form and if valid, attempts to sign in the user
-  /// using the provided email and password. If the sign in fails, it
-  /// will show an error toast to the user.
-  ///
-  /// If the form is invalid, it will print a message to the console.
-  /******  fbc7552c-da33-44b2-8a79-bc801e9a81bc  *******/
+
 
   Future<void> handleSignIn(DeviceInfo deviceInfo, BuildContext context) async {
     FocusScope.of(context).unfocus();
@@ -77,6 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+
+
       } catch (e) {
         CherryToastMsgs.CherryToastError(
           info: deviceInfo,
@@ -90,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return InfoWidget(

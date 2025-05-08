@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.sign_wave_v3"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -47,4 +47,5 @@ flutter {
 }
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
 }

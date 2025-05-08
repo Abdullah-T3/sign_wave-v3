@@ -96,9 +96,9 @@ class _SignupScreenState extends State<SignupScreen> {
       return 'Please enter your phone number';
     }
 
-    final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
+    final phoneRegex = RegExp(r'^(010|011|012|015)\d{8}$');
     if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid phone number (e.g., +1234567890)';
+      return 'Please enter a valid 11-digit Egyptian phone number';
     }
     return null;
   }
@@ -124,7 +124,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  @override
+
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
