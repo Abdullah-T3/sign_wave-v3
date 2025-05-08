@@ -15,7 +15,6 @@ import '../../features/home/data/repo/contact_repository.dart';
 import '../../features/auth/cubit/auth_cubit.dart';
 import '../../router/app_router.dart';
 // Add these imports
-import 'call_notification_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -62,11 +61,7 @@ Future<void> setupServiceLocator() async {
   // Register JitsiMeet
   //getIt.registerLazySingleton(() => JitsiMeet());
 
-  // Register CallNotificationService
-  getIt.registerLazySingleton(() => CallNotificationService());
 
-  // Initialize call notification service
-  await getIt<CallNotificationService>().initialize();
 
   // Register JitsiMeetService with the injected JitsiMeet instance
   // getIt.registerLazySingleton(() => JitsiMeetService(getIt<JitsiMeet>()));

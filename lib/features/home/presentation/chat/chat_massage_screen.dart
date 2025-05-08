@@ -8,11 +8,12 @@ import 'package:http/http.dart' as MessageStatus;
 import 'package:intl/intl.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
+import 'package:sign_wave_v3/core/common/cherryToast/CherryToastMsgs.dart';
 import 'package:sign_wave_v3/features/home/data/model/chat_message.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_state.dart'
     show ChatState, ChatStatus;
-
+import '../../../../core/common/send_call_button.dart';
 import '../../../../core/services/di.dart' show getIt;
 import '../../../../core/theming/colors.dart' show ColorsManager;
 import '../../../../core/theming/styles.dart' show TextStyles;
@@ -103,6 +104,66 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
     super.dispose();
   }
 
+  void onSendCallInvitationFinished(
+    String code,
+    String message,
+    List<String> errorInvitees,
+  ) {
+    if (errorInvitees.isNotEmpty) {
+      var userIDs = '';
+      for (var index = 0; index < errorInvitees.length; index++) {
+        if (index >= 5) {
+          userIDs += '... ';
+          break;
+        }
+
+        final userID = errorInvitees.elementAt(index);
+        userIDs += '$userID ';
+      }
+      if (userIDs.isNotEmpty) {
+        userIDs = userIDs.substring(0, userIDs.length - 1);
+      }
+
+      var message = "User doesn't exist or is offline: $userIDs";
+      if (code.isNotEmpty) {
+        message += ', code: $code, message:$message';
+      }
+      print("lolololololo" + message);
+      InfoWidget(
+        builder: (context, deviceInfo) {
+          return CherryToastMsgs.CherryToastError(
+            info: deviceInfo,
+            context: context,
+            title: code,
+            description: message,
+          );
+        },
+      );
+      // showToast(
+      //   message,
+      //   position: StyledToastPosition.top,
+      //   context: context,
+      // );
+    } else if (code.isNotEmpty) {
+      print("lolololololo" + message);
+      InfoWidget(
+        builder: (context, deviceInfo) {
+          return CherryToastMsgs.CherryToastError(
+            info: deviceInfo,
+            context: context,
+            title: code,
+            description: message,
+          );
+        },
+      );
+      // showToast(
+      //   'code: $code, message:$message',
+      //   position: StyledToastPosition.top,
+      //   context: context,
+      // );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
@@ -128,7 +189,10 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                   children: [
                     Text(
                       widget.receiverName,
-                      style: TextStyles.title.copyWith(color: Colors.white),
+                      style: TextStyles.title.copyWith(
+                        color: Colors.white,
+                        fontSize: deviceInfo.screenWidth * 0.037,
+                      ),
                     ),
                     BlocBuilder<ChatCubit, ChatState>(
                       bloc: _chatCubit,
@@ -145,7 +209,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                               Text(
                                 "typing",
                                 style: TextStyle(
-                                  color: ColorsManager.inChatBackground,
+                                  color: Colors.green.withOpacity(0.8),
                                 ),
                               ),
                             ],
@@ -178,6 +242,13 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
               ],
             ),
             actions: [
+              // Use the sendCallButton function from zegoCloud_call.dart
+              SendCallButton(
+                userID: widget.receiverId,
+                userName: widget.receiverName,
+                onCallFinished: onSendCallInvitationFinished,
+              ),
+              const SizedBox(width: 10),
               BlocBuilder<ChatCubit, ChatState>(
                 bloc: _chatCubit,
                 builder: (context, state) {

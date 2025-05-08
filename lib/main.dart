@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
-import 'package:sign_wave_v3/core/services/notifcation_service.dart';
+import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
+import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'core/observer/app_life_cycle_observer.dart';
 import 'features/home/data/repo/chat_repository.dart';
 import 'core/services/di.dart';
@@ -13,8 +16,9 @@ import 'features/auth/cubit/auth_cubit.dart';
 import 'features/auth/cubit/auth_state.dart';
 import 'features/home/presentation/home/home_screen.dart';
 import 'features/auth/screens/auth/login_screen.dart';
-import 'router/app_router.dart';
 import 'theme/app_theme.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> _initializeApp() async {
   await Firebase.initializeApp();
@@ -23,7 +27,19 @@ Future<void> _initializeApp() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // First initialize Firebase
+
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
+  try {
+    await ZegoUIKit().initLog();
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI([
+      ZegoUIKitSignalingPlugin(),
+    ]);
+    print("ZegoUIKit initialized successfully");
+  } catch (e) {
+    print("Error initializing ZegoUIKit: $e");
+  }
+
   await _initializeApp().timeout(
     const Duration(seconds: 5),
     onTimeout: () => throw Exception('App initialization timed out'),
@@ -34,6 +50,7 @@ void main() async {
     FcmService.firebaseMessagingBackgroundHandler,
   );
   FcmService.onForgroundMessage();
+
   runApp(const MyApp());
 }
 
@@ -46,7 +63,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late AppLifeCycleObserver _lifeCycleObserver;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -55,16 +71,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _initializeLifecycleObserver() {
-    // Initialize with empty user ID initially
     _lifeCycleObserver = AppLifeCycleObserver(
       userId: '',
       chatRepository: getIt<ChatRepository>(),
     );
 
-    // Add observer immediately
     WidgetsBinding.instance.addObserver(_lifeCycleObserver);
 
-    // Listen for auth state changes
     getIt<AuthCubit>().stream.listen((state) {
       if (state.status == AuthStatus.authenticated && state.user != null) {
         _lifeCycleObserver = AppLifeCycleObserver(
@@ -89,12 +102,24 @@ class _MyAppState extends State<MyApp> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
-        key: navigatorKey,
         routes: {'/target': (context) => const HomeScreen()},
         title: 'Sign Wave Translator',
-        navigatorKey: getIt<AppRouter>().navigatorKey,
+        navigatorKey:
+            navigatorKey, 
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
+        builder: (BuildContext context, Widget? child) {
+          return Stack(
+            children: [
+              child!,
+              ZegoUIKitPrebuiltCallMiniOverlayPage(
+                contextQuery: () {
+                  return navigatorKey.currentState!.context;
+                },
+              ),
+            ],
+          );
+        },
         home: BlocBuilder<AuthCubit, AuthState>(
           bloc: getIt<AuthCubit>(),
           builder: (context, state) {
@@ -104,6 +129,12 @@ class _MyAppState extends State<MyApp> {
               );
             }
             if (state.status == AuthStatus.authenticated) {
+              try {
+                onUserLogin(state.user!.uid, state.user!.fullName);
+                print("User logged in: ${state.user!.uid}");
+              } catch (e) {
+                print("Error during user login for ZegoCloud: $e");
+              }
               return const HomeScreen();
             }
             return const LoginScreen();

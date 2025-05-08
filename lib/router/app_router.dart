@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sign_wave_v3/main.dart'; // Import to access the global navigatorKey
 
 class AppRouter {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
+  // Use the global navigatorKey instead of creating a new one
   NavigatorState get _navigator => navigatorKey.currentState!;
 
   void pop<T>([T? result]) {
@@ -10,9 +10,7 @@ class AppRouter {
   }
 
   Future<T?> push<T>(Widget page) {
-    return _navigator.push<T>(
-      MaterialPageRoute(builder: (_) => page),
-    );
+    return _navigator.push<T>(MaterialPageRoute(builder: (_) => page));
   }
 
   Future<T?> pushReplacement<T>(Widget page) {
@@ -29,9 +27,6 @@ class AppRouter {
   }
 
   Future<T?> pushNamed<T>(String routeName, {Object? arguments}) {
-    return _navigator.pushNamed<T>(
-      routeName,
-      arguments: arguments,
-    );
+    return _navigator.pushNamed<T>(routeName, arguments: arguments);
   }
 }

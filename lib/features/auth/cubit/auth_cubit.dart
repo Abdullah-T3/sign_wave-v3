@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/services/zegoCloud_call.dart';
 import '../data/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
@@ -9,6 +10,7 @@ import '../../../../core/services/di.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository;
+
   StreamSubscription<User?>? _authStateSubscription;
 
   AuthCubit({required AuthRepository authRepository})
@@ -60,8 +62,8 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
 
-      // If email is verified, get user data and proceed
       final user = await _authRepository.getUserData(userCredential.uid);
+      await onUserLogin(user.uid, user.fullName);
       emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (e) {
       print(e.toString());
@@ -86,7 +88,7 @@ class AuthCubit extends Cubit<AuthState> {
         phoneNumber: phoneNumber,
         password: password,
       );
-
+      await onUserLogin(user.uid, user.fullName);
       emit(state.copyWith(status: AuthStatus.emailUnverified, user: user));
     } catch (e) {
       emit(state.copyWith(status: AuthStatus.error, error: e.toString()));

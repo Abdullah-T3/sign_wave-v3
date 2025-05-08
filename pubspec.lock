@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "2.1.2"
   cached_network_image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cached_network_image
       sha256: "7c1183e361e5c8b0a0f21a28401eecdbde252441106a9816400dd4c2b2424916"
@@ -486,14 +486,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
-  flutter_callkit_incoming_yoer:
+  flutter_callkit_incoming:
     dependency: transitive
     description:
-      name: flutter_callkit_incoming_yoer
-      sha256: c78b31049e4d7c94ad26619c115b2ded893733da34b3b6b0c5a987ec3dd69d54
+      name: flutter_callkit_incoming
+      sha256: "21d645f0bc622c3ab9c113e289abbbd169a0f9143f3eb2a05ef1fb01b729c239"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4+3"
+    version: "2.5.2"
   flutter_contacts:
     dependency: "direct main"
     description:
@@ -1406,7 +1406,7 @@ packages:
     source: hosted
     version: "2.13.9"
   zego_uikit:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: zego_uikit
       sha256: c366fbb3513ed0536664ac17b5c2aebe24c0b57adfd43db947dc2877bcb241e3
@@ -1417,10 +1417,10 @@ packages:
     dependency: "direct main"
     description:
       name: zego_uikit_prebuilt_call
-      sha256: bd325bb2671f215972c45483beba1ea60d4838ed9df10ab0cbc9056119ecb3fb
+      sha256: b2f090babedff7cba359c14daa170828cc4df81da57deafcd824edd4e0251a2c
       url: "https://pub.dev"
     source: hosted
-    version: "4.16.28"
+    version: "4.17.0-beta.14"
   zego_uikit_signaling_plugin:
     dependency: "direct main"
     description:
