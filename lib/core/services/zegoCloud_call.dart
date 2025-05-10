@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import '../common/custom_avatar_builder.dart';
+import '../helper/dotenv/dot_env_helper.dart';
 
 /// on user login
 Future<void> onUserLogin(String userId, String userName) async {
   try {
     print("Initializing ZegoCloud for user: $userId, $userName");
     await ZegoUIKitPrebuiltCallInvitationService().init(
-      appID: 577934921,
-      appSign:
-          "e45aea09564d8d9fec6b15ccbb9b29d9300980a1ad9b52f1c1f05e5739d1546d",
+      appID: EnvHelper.getInt("ZEGO_APP_ID"),
+      appSign: EnvHelper.getString("ZEGO_APP_SIGN"),
       userID: userId,
       userName: userName,
       plugins: [ZegoUIKitSignalingPlugin()],
@@ -43,11 +42,9 @@ Future<void> onUserLogin(String userId, String userName) async {
     print("ZegoCloud initialization completed successfully");
   } catch (e) {
     print("Error initializing ZegoCloud: $e");
-    // Re-throw the error to be handled by the caller
     rethrow;
   }
 }
-
 
 void onUserLogout() {
   ZegoUIKitPrebuiltCallInvitationService().uninit();

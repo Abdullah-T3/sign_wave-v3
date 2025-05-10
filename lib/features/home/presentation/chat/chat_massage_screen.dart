@@ -242,7 +242,6 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
               ],
             ),
             actions: [
-              // Use the sendCallButton function from zegoCloud_call.dart
               SendCallButton(
                 userID: widget.receiverId,
                 userName: widget.receiverName,
