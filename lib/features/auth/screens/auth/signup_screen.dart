@@ -10,8 +10,8 @@ import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
 import '../../../../core/theming/colors.dart';
-import '../../logic/auth/auth_cubit.dart';
-import '../../logic/auth/auth_state.dart';
+import '../../cubit/auth_cubit.dart';
+import '../../cubit/auth_state.dart';
 import '../../../home/presentation/home/home_screen.dart';
 import '../../../../../router/app_router.dart';
 
@@ -96,9 +96,9 @@ class _SignupScreenState extends State<SignupScreen> {
       return 'Please enter your phone number';
     }
 
-    final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
+    final phoneRegex = RegExp(r'^(010|011|012|015)\d{8}$');
     if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid phone number (e.g., +1234567890)';
+      return 'Please enter a valid 11-digit Egyptian phone number';
     }
     return null;
   }
@@ -124,7 +124,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  @override
+
   @override
   Widget build(BuildContext context) {
     return InfoWidget(

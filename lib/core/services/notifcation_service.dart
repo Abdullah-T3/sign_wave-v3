@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -28,10 +28,17 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
         if (response.payload != null) {
-          navigatorKey.currentState?.pushReplacementNamed(
+          _navigatorKey.currentState?.pushReplacementNamed(
             '/target',
           ); // Navigate to your desired screen
         }
+        //         final data = response.data;
+        // getIt<AppRouter>().pushReplacement(
+        //   ChatMessageScreen(
+        //     receiverId: data['receiverId'],
+        //     receiverName: data['receiverName'],
+        //   ),
+        // );
       },
     );
   }

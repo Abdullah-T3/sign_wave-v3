@@ -54,7 +54,8 @@ class DefaultFirebaseOptions {
     appId: '1:1022031179507:android:026b6b80a73a6559d6d186',
     messagingSenderId: '1022031179507',
     projectId: 'sign-language-translator-11862',
-    databaseURL: 'https://sign-language-translator-11862-default-rtdb.firebaseio.com',
+    databaseURL:
+        'https://sign-language-translator-11862-default-rtdb.firebaseio.com',
     storageBucket: 'sign-language-translator-11862.firebasestorage.app',
   );
 
@@ -63,9 +64,13 @@ class DefaultFirebaseOptions {
     appId: '1:1022031179507:ios:edefe0da5ff76422d6d186',
     messagingSenderId: '1022031179507',
     projectId: 'sign-language-translator-11862',
-    databaseURL: 'https://sign-language-translator-11862-default-rtdb.firebaseio.com',
+    databaseURL:
+        'https://sign-language-translator-11862-default-rtdb.firebaseio.com',
     storageBucket: 'sign-language-translator-11862.firebasestorage.app',
-    iosClientId: '1022031179507-ufsftah59uhp8nmppki601tcclu12vtu.apps.googleusercontent.com',
+    androidClientId:
+        '1022031179507-rrrg87998sle6kdjiacd0pe8478b4989.apps.googleusercontent.com',
+    iosClientId:
+        '1022031179507-ufsftah59uhp8nmppki601tcclu12vtu.apps.googleusercontent.com',
     iosBundleId: 'com.example.signWaveV3',
   );
 }

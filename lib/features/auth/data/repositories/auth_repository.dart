@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sign_wave_v3/core/services/di.dart';
+import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
 import '../models/user_model.dart';
 import '../../../../../core/services/base_repository.dart';
 import '../../../../../core/error/firebase_auth_error_handling.dart';
@@ -133,9 +134,15 @@ class AuthRepository extends BaseRepository {
           fullName: "",
           phoneNumber: "",
           uid: "",
+          fcmToken: "",
         );
       } else {
-        return await getUserData(user.uid);
+        await firestore.collection("users").doc(currentUser!.uid).update({
+          'fcmToken': getIt<String>(instanceName: 'firebaseToken'),
+        });
+
+        final userData = await getUserData(userCredential.user!.uid);
+        return userData;
       }
     } catch (e) {
       log('SignIn Error: ${e.toString()}');
@@ -153,6 +160,14 @@ class AuthRepository extends BaseRepository {
 
   Future<void> signOut() async {
     try {
+      final currentUser = auth.currentUser;
+      if (currentUser != null) {
+        await firestore.collection("users").doc(currentUser.uid).update({
+          'fcmToken': '',
+        });
+      }
+      await FirebaseMessaging.instance.deleteToken();
+      onUserLogout();
       await auth.signOut();
     } catch (e) {
       log('SignOut Error: ${e.toString()}');

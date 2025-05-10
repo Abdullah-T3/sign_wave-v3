@@ -1,0 +1,45 @@
+# TABLE OF CONTENTS
+
+## PRELIMINARY PAGES
+- [ACKNOWLEDGEMENT](ACKNOWLEDGEMENT.md)
+- [ABSTRACT](ABSTRACT.md)
+- [TABLE OF CONTENTS](TABLE_OF_CONTENTS.md)
+- [LIST OF FIGURES](LIST_OF_FIGURES.md)
+- [LIST OF ABBREVIATIONS](LIST_OF_ABBREVIATIONS.md)
+
+## MAIN CONTENT
+
+### [CHAPTER I: INTRODUCTION](INTRODUCTION.md)
+- 1.1 OVERVIEW
+- 1.2 Problem Statement
+- 1.3 The Applied Approach
+- 1.4 Capstone Project Objective
+- 1.5 Capstone Project Methodology
+- 1.6 Capstone Project Used Tools
+- 1.7 Gantt Chart
+- 1.8 Significance of Proposed Capstone Project
+- 1.9 Capstone Project Organization
+
+### [CHAPTER II: LITERATURE REVIEW](LITERATURE_REVIEW.md)
+- 2.1 Literature Review
+
+### [CHAPTER III: SYSTEM ANALYSIS AND DESIGN](SYSTEM_ANALYSIS_AND_DESIGN.md)
+- 3.1 Functional Requirements
+- 3.2 Non-functional Requirements
+- 3.3 UML Diagrams
+
+### [CHAPTER IV: METHODOLOGY](METHODOLOGY.md)
+- 4.1 Methodology
+- 4.2 Used Tools
+- 4.3 Hardware
+
+### [CHAPTER V: GRAPHICAL USER INTERFACE](GRAPHICAL_USER_INTERFACE.md)
+- 5.1 GUI
+
+### [CHAPTER VI: CONCLUSIONS AND FUTURE WORK](CONCLUSIONS_AND_FUTURE_WORK.md)
+- 6.1 CONCLUSIONS
+- 6.2 FUTURE WORK
+
+## END MATTER
+- [REFERENCES](REFERENCES.md)
+- [APPENDIX (CODES)](APPENDIX.md)

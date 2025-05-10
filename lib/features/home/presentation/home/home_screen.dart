@@ -8,7 +8,7 @@ import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
 import '../../data/repo/contact_repository.dart';
 import '../../../../../core/services/di.dart';
-import '../../../auth/logic/auth/auth_cubit.dart';
+import '../../../auth/cubit/auth_cubit.dart';
 import '../../../auth/screens/auth/login_screen.dart';
 import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';
@@ -145,6 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return const TranslatorScreen();
       case 2:
         return const AboutScreen();
+      case 3:
+        return const Center(child: Text("Page not found"));
       default:
         return const Center(child: Text("Page not found"));
     }
@@ -157,21 +159,36 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, deviceInfo) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.blue,
-              leading: Image.asset("assets/images/logo.png"),
-              leadingWidth: deviceInfo.screenWidth * 0.2,
-              title: Text(
-                _selectedIndex == 0
-                    ? "Chats"
-                    : _selectedIndex == 1
-                    ? "Translator"
-                    : "About",
-                style: TextStyles.title.copyWith(
-                  fontSize: deviceInfo.screenWidth * 0.05,
-                  color: Colors.white,
+              backgroundColor: const Color(0xFF135CAF),
+              toolbarHeight: deviceInfo.screenHeight * 0.08,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(deviceInfo.screenWidth * 0.05),
+                  bottomRight: Radius.circular(deviceInfo.screenWidth * 0.05),
                 ),
               ),
+              leading: Image.asset("assets/images/logo.png"),
+              leadingWidth: deviceInfo.screenWidth * 0.2,
+              title: Row(
+                children: [
+                  Text(
+                    "Chats",
+                    style: TextStyles.title.copyWith(
+                      fontSize: deviceInfo.screenWidth * 0.05,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.search, color: Colors.white),
+                  onPressed: () {
+                    // Search functionality can be added here
+                  },
+                ),
                 Padding(
                   padding: EdgeInsets.only(
                     right: deviceInfo.screenWidth * 0.03,
