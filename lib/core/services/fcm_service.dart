@@ -79,14 +79,26 @@ Future<void> sendNotification({
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'channel_id': 'high_importance_channel',
           },
+
         },
-        'apns': {
-          'payload': {
-            'aps': {"sound": "custom_sound.caf", 'content-available': 1},
+      ),
+      data: {
+        'message': {
+          'token': token,
+          'notification': {'title': title, 'body': body},
+          'data': data,
+          'android': {
+            'notification': {
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'channel_id': 'high_importance_channel',
+            },
+          },
+          'apns': {
+            'payload': {
+              'aps': {'sound': 'custom_sound.caf', 'content-available': 1},
+            },
           },
         },
       },
-    },
-  );
-  print('FCM Response: ${response.data}');
+
 }

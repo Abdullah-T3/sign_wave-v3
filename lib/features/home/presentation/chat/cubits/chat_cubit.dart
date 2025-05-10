@@ -59,6 +59,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> sendMessage({
     required String content,
     required String receiverId,
+    required String receiverName,
   }) async {
     if (state.chatRoomId == null) return;
 
@@ -68,6 +69,7 @@ class ChatCubit extends Cubit<ChatState> {
         senderId: userData.uid,
         receiverId: receiverId,
         content: content,
+        receiverName: receiverName,
       );
     } catch (e) {
       log(e.toString());

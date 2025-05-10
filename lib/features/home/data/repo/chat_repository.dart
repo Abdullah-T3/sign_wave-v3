@@ -65,6 +65,7 @@ class ChatRepository extends BaseRepository {
     required String senderId,
     required String receiverId,
     required String content,
+    required String receiverName,
     MessageType type = MessageType.text,
   }) async {
     //batch
@@ -106,7 +107,7 @@ class ChatRepository extends BaseRepository {
             body: message.content,
             token: fcmToken,
             title: userData.fullName.toString(),
-            data: {'chatRoomId': chatRoomId, 'senderId': senderId},
+            data: {'receiverId': receiverId, 'receiverName': receiverName},
           );
         } catch (e) {
           debugPrint('Failed to send notification: $e');
