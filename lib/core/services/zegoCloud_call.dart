@@ -42,26 +42,6 @@ Future<void> onUserLogin(String userId, String userName) async {
                 : ZegoCallInvitationType.videoCall == data.type
                 ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
                 : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
-        config.avatarBuilder = customAvatarBuilder;
-        config.topMenuBar.isVisible = true;
-        config.topMenuBar.buttons.insert(
-          0,
-          ZegoCallMenuBarButtonName.minimizingButton,
-        );
-        config.topMenuBar.buttons.insert(
-          1,
-          ZegoCallMenuBarButtonName.soundEffectButton,
-        );
-        config.turnOnCameraWhenJoining = true;
-        config.turnOnMicrophoneWhenJoining = true;
-        config.useSpeakerWhenJoining = true;
-        config.audioVideoView.useVideoViewAspectFill = true;
-        config.audioVideoView.showAvatarInAudioMode = true;
-        config.audioVideoView.showSoundWavesInAudioMode = true;
-        config.advanceConfigs = {
-          "hardware_encoder": "true",
-          "hardware_decoder": "true",
-        };
         return config;
       },
     );
