@@ -219,12 +219,12 @@ class ChatRepository extends BaseRepository {
       DocumentSnapshot docSnapshot = await docRef.get();
       if (docSnapshot.exists) {
         await docRef.update({
-          'online': isOnline,
+          'isOnline': isOnline,
           'lastSeen': DateTime.now().toIso8601String(),
         });
       } else {
         await docRef.set({
-          'online': isOnline,
+          'isOnline': isOnline,
           'lastSeen': DateTime.now().toIso8601String(),
         });
       }

@@ -10,6 +10,7 @@ android {
     compileSdk = 35
     ndkVersion = "27.0.12077973"
 
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -19,7 +20,6 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
-
     defaultConfig {
         applicationId = "com.example.sign_wave_v3"
         multiDexEnabled = true
@@ -41,11 +41,7 @@ android {
         }
     }
 
-    packagingOptions {
-        jniLibs {
-            excludes += listOf("x86_64/**", "x86/**")
-        }
-    }
+
 }
 
 flutter {

@@ -16,7 +16,6 @@ class AppLifeCycleObserver extends WidgetsBindingObserver {
       debugPrint('Warning: AppLifeCycleObserver initialized with empty userId');
       return;
     }
-
     switch (state) {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
@@ -25,7 +24,6 @@ class AppLifeCycleObserver extends WidgetsBindingObserver {
         break;
       case AppLifecycleState.resumed:
         chatRepository.updateOnlineStatus(userId, true);
-
         break;
       default:
         break;

@@ -14,7 +14,6 @@ class ChatMessage {
   final MessageStatus status;
   final Timestamp timestamp;
   final List<String> readBy;
-
   ChatMessage({
     required this.id,
     required this.chatRoomId,

@@ -10,7 +10,6 @@ import '../../../../../core/error/firebase_auth_error_handling.dart';
 
 class AuthRepository extends BaseRepository {
   Stream<User?> get authStateChanges => auth.authStateChanges();
-
   Future<UserModel> signUp({
     required String fullName,
     required String username,
@@ -39,18 +38,16 @@ class AuthRepository extends BaseRepository {
       User? firebaseUser = userCredential.user;
       if (firebaseUser == null) {
         throw Exception("Failed to create user account.");
-        // ignore: unnecessary_null_comparison
       } else if (firebaseUser != null || !firebaseUser.emailVerified) {
         await firebaseUser.sendEmailVerification();
       }
-      final fcmToken = getIt<String>(instanceName: 'firebaseToken');
       UserModel user = UserModel(
         uid: firebaseUser.uid,
         username: username,
         fullName: fullName,
         email: email,
         phoneNumber: formattedPhoneNumber,
-        fcmToken: fcmToken.toString(),
+        fcmToken: getIt.get<String>(instanceName: 'fcmToken'),
       );
       await saveUserData(user);
       return user;
@@ -74,6 +71,16 @@ class AuthRepository extends BaseRepository {
       email: email,
       password: password,
     );
+    if (userCredential.user == null) {
+      throw Exception("Failed to sign in.");
+    } else if (!userCredential.user!.emailVerified) {
+      throw Exception("Email is not verified.");
+    }
+    final fcmToken = getIt.get<String>(instanceName: 'fcmToken');
+    print("fcmToken in sign in: $fcmToken");
+    await firestore.collection("users").doc(userCredential.user!.uid).update({
+      'fcmToken': fcmToken,
+    });
     return userCredential.user!;
   }
 
@@ -115,41 +122,6 @@ class AuthRepository extends BaseRepository {
     }
   }
 
-  Future<UserModel> signIn({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      User? user = userCredential.user;
-      if (user == null) {
-        throw Exception("User not found.");
-      } else if (user != null && !user.emailVerified) {
-        return UserModel(
-          email: "",
-          username: "",
-          fullName: "",
-          phoneNumber: "",
-          uid: "",
-          fcmToken: "",
-        );
-      } else {
-        await firestore.collection("users").doc(currentUser!.uid).update({
-          'fcmToken': getIt<String>(instanceName: 'firebaseToken'),
-        });
-
-        final userData = await getUserData(userCredential.user!.uid);
-        return userData;
-      }
-    } catch (e) {
-      log('SignIn Error: ${e.toString()}');
-      rethrow;
-    }
-  }
-
   Future<void> saveUserData(UserModel user) async {
     try {
       await firestore.collection("users").doc(user.uid).set(user.toMap());
@@ -163,7 +135,7 @@ class AuthRepository extends BaseRepository {
       final currentUser = auth.currentUser;
       if (currentUser != null) {
         await firestore.collection("users").doc(currentUser.uid).update({
-          'fcmToken': '',
+          'fcmToken': "",
         });
       }
       await FirebaseMessaging.instance.deleteToken();

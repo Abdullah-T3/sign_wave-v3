@@ -8,7 +8,6 @@ import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-
 import 'core/observer/app_life_cycle_observer.dart';
 import 'features/home/data/repo/chat_repository.dart';
 import 'core/services/di.dart';
@@ -103,8 +102,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         routes: {'/target': (context) => const HomeScreen()},
         title: 'Sign Wave Translator',
-        navigatorKey:
-            navigatorKey, 
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         builder: (BuildContext context, Widget? child) {

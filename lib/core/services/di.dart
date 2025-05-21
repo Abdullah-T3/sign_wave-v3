@@ -19,19 +19,19 @@ import '../../router/app_router.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseMessaging.instance
-      .setForegroundNotificationPresentationOptions();
+  await _firebaseMessaging.setForegroundNotificationPresentationOptions();
   await NotificationService().initNotification();
   Dio dio = Dio();
-  final messaging = FirebaseMessaging.instance;
-  dynamic firebaseToken = await messaging.getToken();
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,
   );
   FcmService.onForgroundMessage();
-  print('notification status ${firebaseToken.toString()}');
+
+  final fcmToken = await _firebaseMessaging.getToken();
+  print("FCM Token: $fcmToken");
 
   //-------------------------------------------------//
   getIt.registerLazySingleton<Dio>(() => dio);
@@ -39,10 +39,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
-  // Register FirebaseMessaging
   getIt.registerLazySingleton<String>(
-    () => firebaseToken.toString(),
-    instanceName: 'firebaseToken',
+    instanceName: 'fcmToken',
+    () => fcmToken!,
   );
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => AuthRepository());
@@ -60,8 +59,6 @@ Future<void> setupServiceLocator() async {
 
   // Register JitsiMeet
   //getIt.registerLazySingleton(() => JitsiMeet());
-
-
 
   // Register JitsiMeetService with the injected JitsiMeet instance
   // getIt.registerLazySingleton(() => JitsiMeetService(getIt<JitsiMeet>()));

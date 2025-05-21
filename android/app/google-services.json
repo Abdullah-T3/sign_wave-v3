@@ -41,6 +41,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022031179507:android:0139854656e2a9c8d6d186",
+        "android_client_info": {
+          "package_name": "com.example.zegocloud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022031179507-avqkmaqbtnbr0i2g5ed687ku1tl70fg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKt0Z6Yx1toHmuA9EkjlB0s-nOEqF25Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022031179507-avqkmaqbtnbr0i2g5ed687ku1tl70fg2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1022031179507-47vtm425cmuktt3959hbdl1usjqop50i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.realtimeSignLanguagesTranslator"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

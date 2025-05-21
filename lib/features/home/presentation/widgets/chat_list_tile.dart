@@ -28,7 +28,7 @@ class ChatListTile extends StatelessWidget {
       return "Unknown User";
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final username = _getOtherUsername();

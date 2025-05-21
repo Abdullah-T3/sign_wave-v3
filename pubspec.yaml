@@ -52,7 +52,7 @@ dependencies:
   shimmer: ^3.0.0
   url_launcher: ^6.3.1
   zego_uikit_signaling_plugin: ^2.8.12
-  zego_uikit: ^2.28.0-beta.3
+#  zego_uikit: ^2.28.0-beta.3
   zego_uikit_prebuilt_call: ^4.17.0-beta.1
   cached_network_image: ^3.4.1
 
@@ -75,7 +75,7 @@ flutter:
   assets:
     - assets/images/chats_Logo.png
     - assets/images/logo.png
-    - secret/sign-language-translator-11862-1d331b021b72.json
+    - secret/sign-language-translator-11862-7b0289a35b29.json
 
     - .env
   #   - images/a_dot_burr.jpeg

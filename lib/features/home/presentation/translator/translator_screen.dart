@@ -6,7 +6,7 @@ import '../../../../core/Responsive/ui_component/info_widget.dart'
     show InfoWidget;
 import '../../../../core/theming/colors.dart' show ColorsManager;
 import '../../../../core/theming/styles.dart' show TextStyles;
-import '../../data/services/translator_service.dart' show TranslatorService;
+import '../../../../core/services/translator_service.dart' show TranslatorService;
 
 class TranslatorScreen extends StatefulWidget {
   const TranslatorScreen({super.key});

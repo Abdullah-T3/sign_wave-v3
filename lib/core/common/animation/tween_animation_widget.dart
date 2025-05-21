@@ -11,8 +11,7 @@ class TweenAnimationWidget extends StatelessWidget {
     required this.deviceInfo,
     required this.index,
   });
-  // how to use this widget
-  // TweenAnimationWidget(index: index, deviceInfo: deviceInfo, child: PostCardWidget(post: posts[index], deviceInfo: deviceInfo, idNotMatch: isNotMatch));
+  
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
