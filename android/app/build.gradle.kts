@@ -50,4 +50,14 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+
+    // Add dependencies for Firebase SDK for Google Analytics and FCM
+    // When using BoM, do NOT specify version for Firebase dependencies except Zego which requires explicit version
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging")
+
+    // Zego FCM dependency with explicit version
+    implementation("im.zego:zpns-fcm:2.8.0")
 }
+

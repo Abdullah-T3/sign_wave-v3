@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sign_wave_v3/main.dart'; // Import to access the global navigatorKey
+import 'package:sign_wave_v3/main.dart';
 
 class AppRouter {
   // Use the global navigatorKey instead of creating a new one

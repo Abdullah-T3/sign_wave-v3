@@ -20,9 +20,11 @@ class SendCallButton extends StatelessWidget {
         return ZegoSendCallInvitationButton(
           isVideoCall: true,
           invitees: invitees,
-          resourceID: 'sign_wave',
+          resourceID: 'zego_data',
           iconSize: Size(50, 50),
           buttonSize: Size(50, 50),
+          timeoutSeconds: 30,
+
           icon: ButtonIcon(
             icon: const Icon(Icons.video_call, color: Colors.white),
           ),

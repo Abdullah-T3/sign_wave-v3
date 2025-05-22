@@ -16,16 +16,18 @@ import 'features/auth/cubit/auth_state.dart';
 import 'features/home/presentation/home/home_screen.dart';
 import 'features/auth/screens/auth/login_screen.dart';
 import 'theme/app_theme.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'package:zego_uikit/zego_uikit.dart';
 
 Future<void> _initializeApp() async {
   await Firebase.initializeApp();
   await setupServiceLocator();
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   try {
@@ -49,7 +51,7 @@ void main() async {
   );
   FcmService.onForgroundMessage();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
