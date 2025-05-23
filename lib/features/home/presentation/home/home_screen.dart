@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/core/theming/styles.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
 import 'package:animations/animations.dart';
+import 'package:sign_wave_v3/features/home/presentation/profile/cubit/profile_cubit.dart';
 
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
@@ -14,6 +17,7 @@ import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';
 import '../about/about_screen.dart';
 import '../translator/translator_screen.dart';
+import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,58 +45,69 @@ class _HomeScreenState extends State<HomeScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const Text(
-                "Contacts",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: _contactRepository.getRegisteredUsers(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text("No contacts found"));
-                    }
-                    final contacts = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: contacts.length,
-                      itemBuilder: (context, index) {
-                        final contact = contacts[index];
-                        final contactName = contact["name"] ?? "Unknown";
-                        final contactInitial =
-                            contactName.isNotEmpty
-                                ? contactName[0].toUpperCase()
-                                : "U";
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.1),
-                            child: Text(contactInitial),
-                          ),
-                          title: Text(contactName),
-                          onTap: () {
-                            getIt<AppRouter>().push(
-                              ChatMessageScreen(
-                                receiverId: contact['id'],
-                                receiverName: contact['name'],
+        return InfoWidget(
+          builder: (context, deviceInfo) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    context.tr('contacts'),
+                    style: TextStyle(
+                      fontSize: deviceInfo.screenWidth * 0.02,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<Map<String, dynamic>>>(
+                      future: _contactRepository.getRegisteredContacts(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text("Error: ${snapshot.error}"),
+                          );
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Text(context.tr('No_contacts_found')),
+                          );
+                        }
+                        final contacts = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: contacts.length,
+                          itemBuilder: (context, index) {
+                            final contact = contacts[index];
+                            final contactName = contact["name"] ?? "Unknown";
+                            final contactInitial =
+                                contactName.isNotEmpty
+                                    ? contactName[0].toUpperCase()
+                                    : "U";
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).primaryColor.withOpacity(0.1),
+                                child: Text(contactInitial),
                               ),
+                              title: Text(contactName),
+                              onTap: () {
+                                getIt<AppRouter>().push(
+                                  ChatMessageScreen(
+                                    receiverId: contact['id'],
+                                    receiverName: contact['name'],
+                                  ),
+                                );
+                              },
                             );
                           },
                         );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -113,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
             final chats = snapshot.data!;
             if (chats.isEmpty) {
-              return const Center(child: Text("No recent chats"));
+              return Center(child: Text(context.tr('No_recent_chats')));
             }
             return ListView.builder(
               itemCount: chats.length,
@@ -128,7 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                     print("home screen current user id $_currentUserId");
                     final otherUserName =
-                        chat.participantsName?[otherUserId] ?? "Unknown";
+                        chat.participantsName?[otherUserId] ??
+                        context.tr('unknownUser');
                     getIt<AppRouter>().push(
                       ChatMessageScreen(
                         receiverId: otherUserId,
@@ -144,7 +160,12 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const TranslatorScreen();
       case 2:
-        return const AboutScreen();
+        return BlocProvider(
+          create:
+              (context) =>
+                  ProfileCubit(authRepository: getIt<AuthRepository>()),
+          child: const ProfileScreen(),
+        );
       case 3:
         return const Center(child: Text("Page not found"));
       default:
@@ -170,44 +191,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               leading: Image.asset("assets/images/logo.png"),
               leadingWidth: deviceInfo.screenWidth * 0.2,
-              title: Row(
-                children: [
-                  Text(
-                    "Chats",
-                    style: TextStyles.title.copyWith(
-                      fontSize: deviceInfo.screenWidth * 0.05,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              title: Text(
+                _getAppBarTitle(context),
+                style: TextStyles.title.copyWith(
+                  fontSize: deviceInfo.screenWidth * 0.05,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search, color: Colors.white),
-                  onPressed: () {
-                    // Search functionality can be added here
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    right: deviceInfo.screenWidth * 0.03,
-                  ),
-                  child: InkWell(
-                    onTap: () async {
-                      await getIt<AuthCubit>().signOut();
-                      getIt<AppRouter>().pushAndRemoveUntil(
-                        const LoginScreen(),
-                      );
-                    },
-                    child: Icon(
-                      Icons.logout,
-                      size: deviceInfo.screenWidth * 0.07,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
             ),
             body: PageTransitionSwitcher(
               transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
@@ -226,13 +217,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   _selectedIndex = index;
                 });
               },
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: context.tr('chats'),
+                ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.translate),
-                  label: 'Translator',
+                  label: context.tr('translator'),
                 ),
-                BottomNavigationBarItem(icon: Icon(Icons.info), label: 'About'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: context.tr('profile'),
+                ),
               ],
               selectedItemColor: Colors.blue,
               unselectedItemColor: Colors.grey,
@@ -248,5 +245,19 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+
+  // Get the AppBar title based on the selected index
+  String _getAppBarTitle(BuildContext context) {
+    switch (_selectedIndex) {
+      case 0:
+        return context.tr('chats');
+      case 1:
+        return context.tr('translator');
+      case 2:
+        return context.tr('profile');
+      default:
+        return context.tr('chats');
+    }
   }
 }

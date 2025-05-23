@@ -130,6 +130,15 @@ class AuthRepository extends BaseRepository {
     }
   }
 
+  Future<void> updateUserData(UserModel user) async {
+    try {
+      await firestore.collection("users").doc(user.uid).update(user.toMap());
+      print("success updating user data");
+    } catch (e) {
+      throw Exception("Failed to update user data.");
+    }
+  }
+
   Future<void> signOut() async {
     try {
       final currentUser = auth.currentUser;

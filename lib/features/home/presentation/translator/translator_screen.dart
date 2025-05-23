@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/features/home/presentation/translator/cubit/translator_cubit.dart';
 
 import '../../../../core/Responsive/ui_component/info_widget.dart'
     show InfoWidget;
 import '../../../../core/theming/colors.dart' show ColorsManager;
 import '../../../../core/theming/styles.dart' show TextStyles;
-import '../../../../core/services/translator_service.dart' show TranslatorService;
+import '../../../../core/services/translator_service.dart'
+    show TranslatorService;
 
 class TranslatorScreen extends StatefulWidget {
   const TranslatorScreen({super.key});
@@ -63,7 +65,9 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    "Camera preview will appear here",
+                                    context.tr(
+                                      "Camera preview will appear here",
+                                    ),
                                     style: TextStyles.body.copyWith(
                                       color: Colors.white70,
                                       fontSize: deviceInfo.screenWidth * 0.04,
@@ -84,7 +88,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Translation Results",
+                            context.tr("translation_result"),
                             style: TextStyles.title.copyWith(
                               fontSize: deviceInfo.screenWidth * 0.045,
                             ),
@@ -125,7 +129,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                                           ),
                                           const SizedBox(height: 16),
                                           Text(
-                                            'Predictions:',
+                                            context.tr("translation"),
                                             style: TextStyles.body.copyWith(
                                               fontSize:
                                                   deviceInfo.screenWidth *
@@ -165,7 +169,9 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                                   }
                                   return Center(
                                     child: Text(
-                                      "No translation available yet. Start translating to see results.",
+                                      context.tr(
+                                        "No translation available yet. Start translating to see results",
+                                      ),
                                       style: TextStyles.body.copyWith(
                                         color: Colors.grey.shade600,
                                         fontSize:
@@ -191,7 +197,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                       children: [
                         _buildControlButton(
                           icon: Icons.refresh,
-                          label: "Reset",
+                          label: context.tr("reset"),
                           onPressed: () {
                             _translatorCubit.resetTranslation();
                           },
@@ -199,7 +205,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                         ),
                         _buildControlButton(
                           icon: Icons.play_arrow,
-                          label: "Start",
+                          label: context.tr("start"),
                           onPressed: () {
                             _translatorCubit.recordVideo();
                           },
@@ -208,7 +214,7 @@ class _TranslatorScreenState extends State<TranslatorScreen> {
                         ),
                         _buildControlButton(
                           icon: Icons.settings,
-                          label: "Settings",
+                          label: context.tr("settings"),
                           onPressed: () {
                             // Show settings dialog or navigate to settings screen
                           },

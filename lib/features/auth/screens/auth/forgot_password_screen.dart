@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
+import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
 
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
@@ -108,7 +110,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           width: deviceInfo.screenWidth,
                           height: deviceInfo.screenHeight * 0.3,
                           decoration: BoxDecoration(
-                            color: ColorsManager.primaryGridColor,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Theme.of(context).colorScheme.primary
+                                : ColorsManager.primaryGridColor,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(
                                 deviceInfo.screenWidth * 0.1,
@@ -120,34 +124,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                Colors.blue.shade600,
-                                Colors.blue.shade300,
-                              ],
+                              colors: Theme.of(context).brightness == Brightness.dark
+                                  ? [
+                                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                      Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                                    ]
+                                  : [
+                                      Colors.blue.shade600,
+                                      Colors.blue.shade300,
+                                    ],
                             ),
                           ),
                           child: Stack(
                             children: [
-                              // Title: "Reset Password"
                               Positioned(
-                                top: deviceInfo.screenHeight * 0.02,
-                                child: IconButton(
-                                  onPressed: () => getIt<AppRouter>().pop(),
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
+                                top: deviceInfo.screenHeight * 0.03,
+                                right: deviceInfo.screenWidth * 0.05,
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
+                                          style: TextStyle(
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
+                                          icon: Icon(
+                                            Icons.language,
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                  ],
                                 ),
                               ),
+                            
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Reset Password",
+                                  context.tr("Reset Password"),
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.08,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
+                                    fontSize: deviceInfo.screenWidth * 0.065,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -155,13 +187,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                               // Subtitle: "We'll send you a reset link"
                               Positioned(
-                                top: deviceInfo.screenHeight * 0.18,
+                                top: deviceInfo.screenHeight * 0.19,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "We'll send you a reset link\nto your email",
+                                  context.tr("We'll send you a reset link"),
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.05,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
+                                    fontSize: deviceInfo.screenWidth * 0.045,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
@@ -178,7 +212,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.surface
+                                        : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         deviceInfo.screenWidth * 0.1,
@@ -191,10 +227,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       vertical: deviceInfo.screenHeight * 0.01,
                                     ),
                                     child: Text(
-                                      "Login",
+                                      context.tr('login'),
                                       style: TextStyle(
-                                        color: Colors.blue.shade600,
-                                        fontSize: deviceInfo.screenWidth * 0.04,
+                                        color:  Theme.of(context).brightness == Brightness.dark ? Colors.white :
+                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                        fontSize: deviceInfo.screenWidth * 0.035,
                                       ),
                                     ),
                                   ),
@@ -218,7 +255,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               // Email field
                               CustomTextField(
                                 controller: emailController,
-                                hintText: "Email",
+                                hintText: context.tr('email'),
                                 focusNode: _emailFocus,
                                 validator: _validateEmail,
                                 prefixIcon: const Icon(Icons.email_outlined),
@@ -228,7 +265,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                               // Instructions text
                               Text(
-                                "Enter the email address associated with your account. We'll send you a link to reset your password.",
+                                context.tr("Enter the email address associated with your account. We'll send you a link to reset your password."),
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: deviceInfo.screenWidth * 0.04,
@@ -245,14 +282,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       deviceInfo,
                                       context,
                                     ),
-                                text: 'Send Reset Link',
+                                text: context.tr('send_reset_link'),
                                 child:
                                     state.status == AuthStatus.loading
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                        : const Text(
-                                          "Send Reset Link",
+                                        :  Text(
+                                          context.tr('send_reset_link'),
                                           style: TextStyle(color: Colors.white),
                                         ),
                               ),
@@ -263,15 +300,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               Center(
                                 child: RichText(
                                   text: TextSpan(
-                                    text: "Remember your password? ",
+                                    text: context.tr('back_to_login'),
                                     style: TextStyle(color: Colors.grey[600]),
                                     children: [
                                       TextSpan(
-                                        text: "Login",
+                                        text: context.tr('login'),
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).primaryColor,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:

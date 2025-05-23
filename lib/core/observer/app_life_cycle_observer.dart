@@ -11,7 +11,6 @@ class AppLifeCycleObserver extends WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-
     if (userId.isEmpty) {
       debugPrint('Warning: AppLifeCycleObserver initialized with empty userId');
       return;

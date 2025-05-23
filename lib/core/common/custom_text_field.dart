@@ -9,8 +9,10 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final FocusNode? focusNode;
   final String? Function(String?)? validator;
-  const CustomTextField(
-      {super.key,
+  final bool enabled;
+  
+  const CustomTextField({
+      super.key,
       required this.controller,
       required this.hintText,
       this.obscureText = false,
@@ -18,7 +20,8 @@ class CustomTextField extends StatelessWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.focusNode,
-      this.validator});
+      this.validator,
+      this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,7 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       focusNode: focusNode,
       validator: validator,
+      enabled: enabled,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: prefixIcon,

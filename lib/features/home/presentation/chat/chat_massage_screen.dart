@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:characters/characters.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as MessageStatus;
 import 'package:intl/intl.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
 import 'package:sign_wave_v3/core/common/cherryToast/CherryToastMsgs.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/features/home/data/model/chat_message.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_state.dart'
     show ChatState, ChatStatus;
 import '../../../../core/common/send_call_button.dart';
+import '../../../../core/helper/format_name.dart';
 import '../../../../core/services/di.dart' show getIt;
 import '../../../../core/theming/colors.dart' show ColorsManager;
 import '../../../../core/theming/styles.dart' show TextStyles;
@@ -189,11 +190,12 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.receiverName,
+                      formatName(widget.receiverName),
                       style: TextStyles.title.copyWith(
                         color: Colors.white,
-                        fontSize: deviceInfo.screenWidth * 0.037,
+                        fontSize: deviceInfo.screenWidth * 0.038,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     BlocBuilder<ChatCubit, ChatState>(
                       bloc: _chatCubit,
@@ -208,7 +210,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                 child: const LoadingDots(),
                               ),
                               Text(
-                                "typing",
+                                context.tr('typing'),
                                 style: TextStyle(
                                   color: Colors.green.withOpacity(0.8),
                                 ),
@@ -218,7 +220,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                         }
                         if (state.isReceiverOnline) {
                           return Text(
-                            "Online",
+                            context.tr('online'),
                             style: TextStyles.title.copyWith(
                               color: Colors.green,
                               fontSize: deviceInfo.screenWidth * 0.037,
@@ -228,7 +230,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                         if (state.receiverLastSeen != null) {
                           final lastSeen = state.receiverLastSeen!.toDate();
                           return Text(
-                            "last seen at ${DateFormat('h:mm a').format(lastSeen)}",
+                            "${context.tr('last_seen_at')} ${DateFormat('h:mm a').format(lastSeen)}",
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.8),
                               fontSize: deviceInfo.screenWidth * 0.035,
@@ -248,7 +250,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                 userName: widget.receiverName,
                 onCallFinished: onSendCallInvitationFinished,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: deviceInfo.screenWidth * 0.01),
               BlocBuilder<ChatCubit, ChatState>(
                 bloc: _chatCubit,
                 builder: (context, state) {
@@ -338,6 +340,9 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                       reverse: true,
                       itemCount: state.messages.length,
                       itemBuilder: (context, index) {
+                        print(
+                          "messages status ${state.messages[index].status}",
+                        );
                         final message = state.messages[index];
                         final isMe =
                             message.senderId == _chatCubit.userData.uid;
@@ -384,7 +389,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                   maxLines: null,
                                   minLines: 1,
                                   decoration: InputDecoration(
-                                    hintText: "Type a message",
+                                    hintText: context.tr('type_a_message'),
                                     filled: true,
                                     contentPadding: EdgeInsets.symmetric(
                                       horizontal: deviceInfo.screenWidth * 0.03,
@@ -406,7 +411,9 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                   Icons.send,
                                   color:
                                       _isComposing
-                                          ? Theme.of(context).primaryColor
+                                          ? Theme.of(
+                                            context,
+                                          ).colorScheme.primary
                                           : Colors.grey,
                                 ),
                               ),
@@ -536,52 +543,103 @@ class MessageBubble extends StatelessWidget {
           right: isMe ? padding : deviceInfo.screenWidth * 0.15,
           bottom: deviceInfo.screenHeight * 0.01,
         ),
-        padding: EdgeInsets.symmetric(
-          horizontal: padding,
-          vertical: deviceInfo.screenHeight * 0.01,
-        ),
         decoration: BoxDecoration(
           color:
               isMe
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).primaryColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment:
-              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isMe ? Colors.white : Colors.black,
-                fontSize: fontSize,
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  DateFormat('h:mm a').format(message.timestamp.toDate()),
-                  style: TextStyle(
-                    color: isMe ? Colors.white70 : Colors.black54,
-                    fontSize: timestampSize,
-                  ),
-                ),
-                if (isMe) ...[
-                  SizedBox(width: deviceInfo.screenWidth * 0.01),
-                  Icon(
-                    Icons.done_all,
-                    size: iconSize,
-                    color:
-                        message.status == MessageStatus.read
-                            ? Colors.red
-                            : Colors.white70,
-                  ),
-                ],
-              ],
+                  ? ColorsManager.blue
+                  : Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2A2A2A)
+                  : const Color(0xFFEEF2F7),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(isMe ? 16 : 4),
+            topRight: Radius.circular(isMe ? 4 : 16),
+            bottomLeft: const Radius.circular(16),
+            bottomRight: const Radius.circular(16),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
             ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(isMe ? 16 : 4),
+            topRight: Radius.circular(isMe ? 4 : 16),
+            bottomLeft: const Radius.circular(16),
+            bottomRight: const Radius.circular(16),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onLongPress: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(context.tr('message_options'))),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: padding,
+                  vertical: deviceInfo.screenHeight * 0.01,
+                ),
+                child: Column(
+                  crossAxisAlignment:
+                      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message.content,
+                      style: TextStyle(
+                        color:
+                            isMe
+                                ? Colors.white
+                                : Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? Colors.white.withOpacity(0.9)
+                                : Colors.black87,
+                        fontSize: fontSize,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          DateFormat(
+                            'h:mm a',
+                          ).format(message.timestamp.toDate()),
+                          style: TextStyle(
+                            color:
+                                isMe
+                                    ? Colors.white70
+                                    : Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white60
+                                    : Colors.black54,
+                            fontSize: timestampSize,
+                          ),
+                        ),
+                        if (isMe) ...[
+                          SizedBox(width: deviceInfo.screenWidth * 0.01),
+                          Icon(
+                            message.status == MessageStatus.read
+                                ? Icons.done_all
+                                : Icons.done,
+                            size: iconSize,
+                            color:
+                                message.status == MessageStatus.read
+                                    ? Colors.lightBlueAccent
+                                    : Colors.white70,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

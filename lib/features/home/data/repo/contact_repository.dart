@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+
+import '../../../../core/services/base_repository.dart';
 import '../../../auth/data/models/user_model.dart';
-import '../../../../../core/services/base_repository.dart';
 
 class ContactRepository extends BaseRepository {
   String get currentUserId => FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -10,29 +11,79 @@ class ContactRepository extends BaseRepository {
     return await FlutterContacts.requestPermission();
   }
 
-  Future<List<Map<String, dynamic>>> getRegisteredUsers() async {
+  Future<List<Map<String, dynamic>>> getRegisteredContacts() async {
     try {
-      // Get all users from Firestore
-      final usersSnapshot = await firestore.collection('users').get();
+      print('Getting registered contacts');
+      bool hasPermission = await requestContactsPermission();
+      if (!hasPermission) {
+        print('Contacts permission denied');
+        return [];
+      }
 
+      final contacts = await FlutterContacts.getContacts(
+        withProperties: true,
+        withPhoto: true,
+      );
+
+      final phoneNumbers =
+          contacts
+              .where((contact) => contact.phones.isNotEmpty)
+              .map(
+                (contact) => {
+                  'name': contact.displayName,
+                  'phoneNumber': contact.phones.first.number.replaceAll(
+                    RegExp(r'[^\d+]'),
+                    '',
+                  ),
+                  'photo': contact.photo,
+                },
+              )
+              .toList();
+
+      final usersSnapshot = await firestore.collection('users').get();
+      print('Users snapshot: ${usersSnapshot.docs.length}');
       final registeredUsers =
           usersSnapshot.docs
               .map((doc) => UserModel.fromFirestore(doc))
               .toList();
 
-      // Return a list of registered users with only necessary fields
-      return registeredUsers
-          .where((user) => user.uid != currentUserId) // Exclude current user
-          .map((user) {
-            return {
-              'id': user.uid,
-              'name': user.fullName,
-              'phoneNumber': user.phoneNumber,
-            };
-          })
-          .toList();
+      final matchedContacts =
+          phoneNumbers
+              .where((contact) {
+                String phoneNumber = contact["phoneNumber"].toString();
+
+                if (phoneNumber.startsWith("+20")) {
+                  phoneNumber = phoneNumber.substring(3);
+                }
+
+                return registeredUsers.any(
+                  (user) =>
+                      user.phoneNumber == phoneNumber &&
+                      user.uid != currentUserId,
+                );
+              })
+              .map((contact) {
+                String phoneNumber = contact["phoneNumber"].toString();
+
+                if (phoneNumber.startsWith("+20")) {
+                  phoneNumber = phoneNumber.substring(3);
+                }
+
+                final registeredUser = registeredUsers.firstWhere(
+                  (user) => user.phoneNumber == phoneNumber,
+                );
+
+                return {
+                  'id': registeredUser.uid,
+                  'name': contact['name'],
+                  'phoneNumber': contact['phoneNumber'],
+                };
+              })
+              .toList();
+      print('Matched contacts: ${matchedContacts.length}');
+      return matchedContacts;
     } catch (e) {
-      print('Error getting registered users: $e');
+      print('Error getting registered contacts: $e');
       return [];
     }
   }

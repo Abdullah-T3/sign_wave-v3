@@ -22,6 +22,12 @@ Future<void> onUserLogin(String userId, String userName) async {
         ZegoCallInvitationPermission.microphone,
       ],
     ),
+    invitationEvents: ZegoUIKitPrebuiltCallInvitationEvents(
+      onIncomingCallAcceptButtonPressed: () {
+        ZegoUIKit().turnCameraOn(true);
+      },
+    ),
+
     notificationConfig: ZegoCallInvitationNotificationConfig(
       androidNotificationConfig: ZegoCallAndroidNotificationConfig(
         showFullScreen: true,
@@ -54,17 +60,23 @@ Future<void> onUserLogin(String userId, String userName) async {
               : ZegoCallInvitationType.videoCall == data.type
               ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
               : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
-
       config.avatarBuilder = customAvatarBuilder;
       config.topMenuBar.isVisible = true;
-
-      /// support minimizing, show minimizing button
+      config.turnOnCameraWhenJoining = true;
       config.topMenuBar.isVisible = true;
+      config.duration.isVisible = true;
       config.topMenuBar.buttons.insert(
         0,
         ZegoCallMenuBarButtonName.minimizingButton,
       );
-
+      config.topMenuBar.buttons.insert(
+        1,
+        ZegoCallMenuBarButtonName.beautyEffectButton,
+      );
+      config.topMenuBar.buttons.insert(
+        2,
+        ZegoCallMenuBarButtonName.soundEffectButton,
+      );
       return config;
     },
   );

@@ -56,6 +56,13 @@ Future<void> sendNotification({
   required String body,
   required Map<String, String> data,
 }) async {
+  if (token.isEmpty) {
+    print('Error: FCM token is empty.');
+    return;
+  }
+  // Optional: trim the token
+  token = token.trim();
+
   final String accessToken = await getAccessToken();
   final String projectId = EnvHelper.getString('fbProjectId');
   final String fcmUrl =

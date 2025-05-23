@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
+import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/auth/login_screen.dart'
     show LoginScreen;
-
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
 import '../../../../../core/common/custom_button.dart';
@@ -55,14 +56,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   String? _validateName(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please enter your full name";
+      return context.tr('Please enter your name');
     }
     return null;
   }
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
-      return "Please enter your username";
+      return context.tr('Please enter your username');
     }
     return null;
   }
@@ -70,11 +71,11 @@ class _SignupScreenState extends State<SignupScreen> {
   // Email validation
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email address';
+      return context.tr('Please enter your email');
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address (e.g., example@email.com)';
+      return context.tr('Please enter a valid email address');
     }
     return null;
   }
@@ -82,10 +83,10 @@ class _SignupScreenState extends State<SignupScreen> {
   // Password validation
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return context.tr('Please enter your password');
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+      return context.tr('Password must be at least 6 characters long');
     }
     return null;
   }
@@ -93,12 +94,12 @@ class _SignupScreenState extends State<SignupScreen> {
   // Phone validation
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your phone number';
+      return context.tr('Please enter your phone number');
     }
-
+    
     final phoneRegex = RegExp(r'^(010|011|012|015)\d{8}$');
     if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid 11-digit Egyptian phone number';
+      return context.tr('Please enter a valid 11-digit Egyptian phone number');
     }
     return null;
   }
@@ -146,8 +147,8 @@ class _SignupScreenState extends State<SignupScreen> {
               CherryToastMsgs.CherryToastError(
                 info: deviceInfo,
                 context: context,
-                title: "Error",
-                description: "Please verify your email first",
+                title: context.tr('error'),
+                description: context.tr("Please verify your email first"),
               ).show(context);
             }
             getIt<AppRouter>().pushAndRemoveUntil(const LoginScreen());
@@ -166,7 +167,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           width: deviceInfo.screenWidth,
                           height: deviceInfo.screenHeight * 0.3,
                           decoration: BoxDecoration(
-                            color: ColorsManager.primaryGridColor,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Theme.of(context).colorScheme.primary
+                                : ColorsManager.primaryGridColor,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(
                                 deviceInfo.screenWidth * 0.1,
@@ -178,23 +181,62 @@ class _SignupScreenState extends State<SignupScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                Colors.blue.shade600,
-                                Colors.blue.shade300,
-                              ],
+                              colors: Theme.of(context).brightness == Brightness.dark
+                                  ? [
+                                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                      Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                                    ]
+                                  : [
+                                      Colors.blue.shade600,
+                                      Colors.blue.shade300,
+                                    ],
                             ),
                           ),
                           child: Stack(
                             children: [
+                              Positioned(
+                                top: deviceInfo.screenHeight * 0.03,
+                                right: deviceInfo.screenWidth * 0.05,
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
+                                          style: TextStyle(
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
+                                          icon: Icon(
+                                            Icons.language,
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                  ],
+                                ),
+                              ),
                               // Title: "Sign Up"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Sign Up",
+                                  context.tr('sign up'),
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.08,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
+                                    fontSize: deviceInfo.screenWidth * 0.07,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -205,9 +247,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                 top: deviceInfo.screenHeight * 0.18,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Welcome Back to\nSign Wave",
+                                  context.tr('Welcome to Sign Wave'),
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.05,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -225,7 +269,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.surface
+                                        : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         deviceInfo.screenWidth * 0.05,
@@ -238,9 +284,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                       vertical: deviceInfo.screenHeight * 0.01,
                                     ),
                                     child: Text(
-                                      "Sign In",
+                                      context.tr('sign in'),
                                       style: TextStyle(
-                                        color: Colors.blue.shade600,
+                                        color:  Theme.of(context).brightness == Brightness.dark ? Colors.white :
+                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
                                         fontSize: deviceInfo.screenWidth * 0.04,
                                       ),
                                     ),
@@ -265,14 +312,14 @@ class _SignupScreenState extends State<SignupScreen> {
                               CustomTextField(
                                 controller: nameController,
                                 focusNode: _nameFocus,
-                                hintText: "Full Name",
+                                hintText: context.tr('name'),
                                 validator: _validateName,
                                 prefixIcon: const Icon(Icons.person_outline),
                               ),
                               SizedBox(height: deviceInfo.screenHeight * 0.015),
                               CustomTextField(
                                 controller: usernameController,
-                                hintText: "Username",
+                                hintText: context.tr('username'),
                                 focusNode: _usernameFocus,
                                 validator: _validateUsername,
                                 prefixIcon: const Icon(Icons.alternate_email),
@@ -280,7 +327,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               SizedBox(height: deviceInfo.screenHeight * 0.015),
                               CustomTextField(
                                 controller: emailController,
-                                hintText: "Email",
+                                hintText: context.tr('email'),
                                 focusNode: _emailFocus,
                                 validator: _validateEmail,
                                 prefixIcon: const Icon(Icons.email_outlined),
@@ -290,14 +337,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                 controller: phoneController,
                                 focusNode: _phoneFocus,
                                 validator: _validatePhone,
-                                hintText: "Phone Number",
+                                hintText: context.tr('phone'),
                                 prefixIcon: const Icon(Icons.phone_outlined),
                               ),
                               SizedBox(height: deviceInfo.screenHeight * 0.015),
                               CustomTextField(
                                 controller: passwordController,
                                 obscureText: !_isPasswordVisible,
-                                hintText: "Password",
+                                hintText: context.tr('password'),
                                 focusNode: _passwordFocus,
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -317,21 +364,21 @@ class _SignupScreenState extends State<SignupScreen> {
                               SizedBox(height: deviceInfo.screenHeight * 0.05),
                               CustomButton(
                                 onPressed: handleSignUp,
-                                text: "Create Account",
+                                text: context.tr("create_account"),
                               ),
                               SizedBox(height: deviceInfo.screenHeight * 0.05),
                               Center(
                                 child: RichText(
                                   text: TextSpan(
-                                    text: "Already have an account?  ",
+                                    text: context.tr('Already have an account?'),
                                     style: TextStyle(color: Colors.grey[600]),
                                     children: [
                                       TextSpan(
-                                        text: "Login",
+                                        text: context.tr("login"),
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).primaryColor,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:

@@ -28,11 +28,10 @@ class ChatListTile extends StatelessWidget {
       return "Unknown User";
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final username = _getOtherUsername();
-    final theme = Theme.of(context);
 
     return SlideTransitionWidget(
       child: InfoWidget(
@@ -160,8 +159,9 @@ class ChatListTile extends StatelessWidget {
   }
 
   String _getFormattedTime() {
-    // This is a placeholder - in a real app, you would get the actual timestamp from the chat
-    // For now, returning a sample time format as shown in the image
-    return "10:25";
+    if (chat.lastMessageTime == null) return '';
+
+    final dateTime = chat.lastMessageTime!.toDate();
+    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

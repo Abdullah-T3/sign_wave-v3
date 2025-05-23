@@ -5,9 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
+import 'package:sign_wave_v3/core/theme/cubit/theme_cubit.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/cubits/chat_cubit.dart';
+import 'package:sign_wave_v3/features/home/presentation/profile/cubit/profile_cubit.dart';
 import 'package:sign_wave_v3/firebase_options.dart';
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/home/data/repo/chat_repository.dart';
@@ -31,6 +35,7 @@ Future<void> setupServiceLocator() async {
   FcmService.onForgroundMessage();
 
   final fcmToken = await _firebaseMessaging.getToken();
+
   print("FCM Token: $fcmToken");
 
   //-------------------------------------------------//
@@ -38,6 +43,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => AppRouter());
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
+  );
+  getIt.registerLazySingleton<FirebaseMessaging>(
+    () => _firebaseMessaging,
   );
   getIt.registerLazySingleton<String>(
     instanceName: 'fcmToken',
@@ -55,6 +63,10 @@ Future<void> setupServiceLocator() async {
       chatRepository: ChatRepository(),
       userData: getIt<FirebaseAuth>().currentUser!,
     ),
+  );
+  
+  getIt.registerFactory(
+    () => ProfileCubit(authRepository: getIt<AuthRepository>()),
   );
 
   // Register JitsiMeet

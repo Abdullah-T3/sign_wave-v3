@@ -4,6 +4,7 @@ import 'package:sign_wave_v3/core/services/base_repository.dart'
     show BaseRepository;
 import 'package:sign_wave_v3/core/services/fcm_service.dart'
     show sendNotification;
+import '../../../../core/observer/app_life_cycle_observer.dart';
 import '../../../../core/services/di.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../model/chat_message.dart';
@@ -98,20 +99,25 @@ class ChatRepository extends BaseRepository {
       "lastMessageSenderId": senderId,
       "lastMessageTime": message.timestamp,
     });
+    bool isReceiverOnline = false;
+    getUserOnlineStatus(receiverId).listen((status) {
+      isReceiverOnline = status['isOnline'];
+    });
     getFcmToken(receiverId).then((fcmToken) async {
       final userId = await getIt<AuthRepository>().currentUser!.uid;
       final userData = await AuthRepository().getUserData(userId);
-      if (fcmToken != null) {
-        try {
+      try {
+        print("fcm token 1111 $isReceiverOnline");
+        if (!isReceiverOnline) {
           sendNotification(
             body: message.content,
             token: fcmToken,
             title: userData.fullName.toString(),
             data: {'receiverId': receiverId, 'receiverName': receiverName},
           );
-        } catch (e) {
-          debugPrint('Failed to send notification: $e');
         }
+      } catch (e) {
+        debugPrint('Failed to send notification: $e');
       }
     });
     Future.wait([batch.commit()]);

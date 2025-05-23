@@ -2,13 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
+import 'package:sign_wave_v3/core/localization/app_localizations.dart';
+import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/auth/forgot_password_screen.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
 import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
-import '../../../../core/services/fcm_service.dart';
 import '../../../../core/theming/colors.dart';
 import '../../cubit/auth_cubit.dart';
 import '../../cubit/auth_state.dart';
@@ -42,11 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your email address';
+      return context.tr('Please enter your email');
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address (e.g., example@email.com)';
+      return context.tr('Please enter a valid email address');
     }
     return null;
   }
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return 'Please enter a password';
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+      return context.tr('Password must be at least 6 characters long');
     }
     return null;
   }
@@ -98,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
               CherryToastMsgs.CherryToastSuccess(
                 info: deviceInfo,
                 context: context,
-                title: "Success",
-                description: "Logged in successfully",
+                title: context.tr('success'),
+                description: context.tr('successfully logged in'),
               ).show(context);
               getIt<AppRouter>().pushAndRemoveUntil(const HomeScreen());
             } else if (state.status == AuthStatus.error &&
@@ -152,22 +153,61 @@ class _LoginScreenState extends State<LoginScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                Colors.blue.shade600,
-                                Colors.blue.shade300,
-                              ],
+                              colors: Theme.of(context).brightness == Brightness.dark
+                                ? [
+                                    Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                    Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                                  ]
+                                : [
+                                    Colors.blue.shade600,
+                                    Colors.blue.shade300,
+                                  ],
                             ),
                           ),
                           child: Stack(
                             children: [
+                              Positioned(
+                                top: deviceInfo.screenHeight * 0.03,
+                                right: deviceInfo.screenWidth * 0.05,
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
+                                          style: TextStyle(
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
+                                          icon: Icon(
+                                            Icons.language,
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                              ? Theme.of(context).colorScheme.onSurface
+                                              : Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                  ],
+                                ),
+                              ),
                               // Title: "Sign In"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Sign In",
+                                  context.tr('sign in'),
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.08,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -179,9 +219,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: deviceInfo.screenHeight * 0.18,
                                 left: deviceInfo.screenWidth * 0.05,
                                 child: Text(
-                                  "Welcome Back to\nSign Wave",
+                                  context.tr('Welcome Back to Sign Wave'),
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Theme.of(context).colorScheme.onSurface
+                                        : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.05,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -199,10 +241,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                                        ? Theme.of(context).colorScheme.surface
+                                        : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
-                                        deviceInfo.screenWidth * 0.1,
+                                        deviceInfo.screenWidth * 0.05,
                                       ),
                                     ),
                                   ),
@@ -212,9 +256,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       vertical: deviceInfo.screenHeight * 0.01,
                                     ),
                                     child: Text(
-                                      "Sign Up",
+                                      context.tr('sign up'),
                                       style: TextStyle(
-                                        color: Colors.blue.shade600,
+                                        color:   Theme.of(context).brightness == Brightness.dark ? Colors.white :
+                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
                                         fontSize: deviceInfo.screenWidth * 0.04,
                                       ),
                                     ),
@@ -238,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               CustomTextField(
                                 controller: emailController,
-                                hintText: "Email",
+                                hintText: context.tr('email'),
                                 focusNode: _emailFocus,
                                 validator: _validateEmail,
                                 prefixIcon: const Icon(Icons.email_outlined),
@@ -249,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 controller: passwordController,
                                 focusNode: _passwordFocus,
                                 validator: _validatePassword,
-                                hintText: "Password",
+                                hintText: context.tr('password'),
                                 prefixIcon: const Icon(Icons.lock_outline),
                                 obscureText: !_isPasswordVisible,
                                 suffixIcon: IconButton(
@@ -269,14 +314,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 alignment: Alignment.centerRight,
                                 child: TextButton(
                                   onPressed: () {
-                                    getIt<AppRouter>().push(
+                                    getIt<AppRouter>().pushReplacement(
                                       const ForgotPasswordScreen(),
                                     );
                                   },
                                   child: Text(
-                                    "Forgot Password?",
+                                    context.tr('forgot password?'),
                                     style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -286,30 +331,34 @@ class _LoginScreenState extends State<LoginScreen> {
                               CustomButton(
                                 onPressed:
                                     () => handleSignIn(deviceInfo, context),
-                                text: 'Login',
+                                text: context.tr('login'),
                                 child:
                                     state.status == AuthStatus.loading
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                        : const Text(
-                                          "Login",
+                                        :  Text(
+                                          context.tr('login'),
                                           style: TextStyle(color: Colors.white),
                                         ),
                               ),
                               SizedBox(height: deviceInfo.screenHeight * 0.02),
                               Center(
                                 child: RichText(
+
                                   text: TextSpan(
-                                    text: "Don't have an account?  ",
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    text: context.tr("don't have an account?" ),
+
+                                    style: TextStyle(color: Theme.of(context).brightness == Brightness.dark 
+                                        ? Colors.grey[400] 
+                                        : Colors.grey[600]),
                                     children: [
                                       TextSpan(
-                                        text: "Sign up",
+                                        text: context.tr('sign up'),
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).primaryColor,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:
