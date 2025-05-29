@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1080px" preserveAspectRatio="none" style="width:1200px;height:1080px;background:#FFFFFF;" version="1.1" viewBox="0 0 1200 1080" width="1200px" zoomAndPan="magnify">
+  <defs>
+    <filter height="300%" id="f1aqxfxwbfxbxl" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0"/>
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/>
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/>
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#FFFFFF" filter="url(#f1aqxfxwbfxbxl)" height="860.9375" style="stroke:#A80036;stroke-width:1.0;" width="1000" x="100" y="109.5"/>
+    <text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacing" textLength="184" x="508" y="134.4023">Sign Wave Application</text>
+    <ellipse cx="600.5" cy="173.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="212" x="494.5" y="177.4951">User Registration &amp; Authentication</text>
+    <ellipse cx="600.5" cy="243.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="247.4951">User Profile Management</text>
+    <ellipse cx="600.5" cy="313.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="212" x="494.5" y="317.4951">Sign Language Recognition &amp; Translation</text>
+    <ellipse cx="600.5" cy="383.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="387.4951">Video Calling</text>
+    <ellipse cx="600.5" cy="453.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="457.4951">Settings Configuration</text>
+    <ellipse cx="600.5" cy="523.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="527.4951">Offline Phrase Access</text>
+    <ellipse cx="600.5" cy="593.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="597.4951">Contacts Management</text>
+    <ellipse cx="600.5" cy="663.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="667.4951">Voice Command Recognition</text>
+    <ellipse cx="600.5" cy="733.5" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="120" ry="25" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="524.5" y="737.4951">Data Synchronization</text>
+    <ellipse cx="200.5" cy="540" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/>
+    <path d="M200.5,548 L200.5,575 M187.5,556 L213.5,556 M200.5,575 L187.5,590 M200.5,575 L213.5,590 " fill="none" filter="url(#f1aqxfxwbfxbxl)" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65" x="168" y="609.4951">Deaf User</text>
+    <ellipse cx="1000.5" cy="540" fill="#FEFECE" filter="url(#f1aqxfxwbfxbxl)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/>
+    <path d="M1000.5,548 L1000.5,575 M987.5,556 L1013.5,556 M1000.5,575 L987.5,590 M1000.5,575 L1013.5,590 " fill="none" filter="url(#f1aqxfxwbfxbxl)" style="stroke:#A80036;stroke-width:1.5;"/>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="89" x="956" y="609.4951">Hearing User</text>
+    <path d="M233.5,540 L480.5,540 " fill="none" style="stroke:#A80036;stroke-width:1.0;"/>
+    <polygon fill="#A80036" points="475.5,173.5,485.5,177.5,475.5,181.5,479.5,177.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="173.5" y2="173.5"/>
+    <polygon fill="#A80036" points="475.5,243.5,485.5,247.5,475.5,251.5,479.5,247.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="243.5" y2="243.5"/>
+    <polygon fill="#A80036" points="475.5,313.5,485.5,317.5,475.5,321.5,479.5,317.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="313.5" y2="313.5"/>
+    <polygon fill="#A80036" points="475.5,383.5,485.5,387.5,475.5,391.5,479.5,387.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="383.5" y2="383.5"/>
+    <polygon fill="#A80036" points="475.5,453.5,485.5,457.5,475.5,461.5,479.5,457.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="453.5" y2="453.5"/>
+    <polygon fill="#A80036" points="475.5,523.5,485.5,527.5,475.5,531.5,479.5,527.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="523.5" y2="523.5"/>
+    <polygon fill="#A80036" points="475.5,593.5,485.5,597.5,475.5,601.5,479.5,597.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="593.5" y2="593.5"/>
+    <polygon fill="#A80036" points="475.5,663.5,485.5,667.5,475.5,671.5,479.5,667.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="663.5" y2="663.5"/>
+    <polygon fill="#A80036" points="475.5,733.5,485.5,737.5,475.5,741.5,479.5,737.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="233.5" x2="480.5" y1="733.5" y2="733.5"/>
+    <path d="M967.5,540 L720.5,540 " fill="none" style="stroke:#A80036;stroke-width:1.0;"/>
+    <polygon fill="#A80036" points="725.5,173.5,715.5,177.5,725.5,181.5,721.5,177.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="173.5" y2="173.5"/>
+    <polygon fill="#A80036" points="725.5,243.5,715.5,247.5,725.5,251.5,721.5,247.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="243.5" y2="243.5"/>
+    <polygon fill="#A80036" points="725.5,383.5,715.5,387.5,725.5,391.5,721.5,387.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="383.5" y2="383.5"/>
+    <polygon fill="#A80036" points="725.5,453.5,715.5,457.5,725.5,461.5,721.5,457.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="453.5" y2="453.5"/>
+    <polygon fill="#A80036" points="725.5,523.5,715.5,527.5,725.5,531.5,721.5,527.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="523.5" y2="523.5"/>
+    <polygon fill="#A80036" points="725.5,593.5,715.5,597.5,725.5,601.5,721.5,597.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="593.5" y2="593.5"/>
+    <polygon fill="#A80036" points="725.5,663.5,715.5,667.5,725.5,671.5,721.5,667.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="663.5" y2="663.5"/>
+    <polygon fill="#A80036" points="725.5,733.5,715.5,737.5,725.5,741.5,721.5,737.5" style="stroke:#A80036;stroke-width:1.0;"/>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="720.5" x2="967.5" y1="733.5" y2="733.5"/>
+  </g>
+</svg>

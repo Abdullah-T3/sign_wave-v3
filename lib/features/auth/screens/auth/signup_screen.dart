@@ -96,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value == null || value.isEmpty) {
       return context.tr('Please enter your phone number');
     }
-    
+
     final phoneRegex = RegExp(r'^(010|011|012|015)\d{8}$');
     if (!phoneRegex.hasMatch(value)) {
       return context.tr('Please enter a valid 11-digit Egyptian phone number');
@@ -125,11 +125,12 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
       builder: (context, deviceInfo) {
+        final isLTR = Directionality.of(context) == TextDirection.ltr;
+
         return BlocConsumer<AuthCubit, AuthState>(
           bloc: getIt<AuthCubit>(),
           listener: (context, state) {
@@ -167,9 +168,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           width: deviceInfo.screenWidth,
                           height: deviceInfo.screenHeight * 0.3,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Theme.of(context).colorScheme.primary
-                                : ColorsManager.primaryGridColor,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Theme.of(context).colorScheme.primary
+                                    : ColorsManager.primaryGridColor,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(
                                 deviceInfo.screenWidth * 0.1,
@@ -181,61 +183,96 @@ class _SignupScreenState extends State<SignupScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: Theme.of(context).brightness == Brightness.dark
-                                  ? [
-                                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                                      Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                                    ]
-                                  : [
-                                      Colors.blue.shade600,
-                                      Colors.blue.shade300,
-                                    ],
+                              colors:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? [
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.8),
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.5),
+                                      ]
+                                      : [
+                                        Colors.blue.shade600,
+                                        Colors.blue.shade300,
+                                      ],
                             ),
                           ),
                           child: Stack(
                             children: [
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.03,
-                                right: deviceInfo.screenWidth * 0.05,
+                                right:
+                                    isLTR
+                                        ? deviceInfo.screenWidth * 0.01
+                                        : null,
+                                left:
+                                    isLTR
+                                        ? null
+                                        : deviceInfo.screenWidth * 0.01,
                                 child: Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
-                                          style: TextStyle(
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
-                                          icon: Icon(
-                                            Icons.language,
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      context
+                                          .read<LocalizationCubit>()
+                                          .state
+                                          .locale
+                                          .languageCode
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface
+                                                : Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            deviceInfo.screenWidth * 0.036,
+                                      ),
                                     ),
-                                    
+                                    IconButton(
+                                      onPressed:
+                                          () =>
+                                              context
+                                                  .read<LocalizationCubit>()
+                                                  .toggleLocale(),
+                                      icon: Icon(
+                                        Icons.language,
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface
+                                                : Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                               // Title: "Sign Up"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
-                                left: deviceInfo.screenWidth * 0.05,
+                                left:
+                                    isLTR
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : null,
+                                right:
+                                    isLTR ? null : deviceInfo.screenWidth * 0.1,
                                 child: Text(
                                   context.tr('sign up'),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.07,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -245,13 +282,22 @@ class _SignupScreenState extends State<SignupScreen> {
                               // Subtitle: "Welcome Back to Sign Wave"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.18,
-                                left: deviceInfo.screenWidth * 0.05,
+                                left:
+                                    isLTR
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : null,
+                                right:
+                                    isLTR ? null : deviceInfo.screenWidth * 0.1,
                                 child: Text(
                                   context.tr('Welcome to Sign Wave'),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.05,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -261,7 +307,12 @@ class _SignupScreenState extends State<SignupScreen> {
                               // "Sign In" Button
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
-                                right: deviceInfo.screenWidth * 0.05,
+                                right:
+                                    isLTR ? deviceInfo.screenWidth * 0.1 : null,
+                                left:
+                                    isLTR
+                                        ? null
+                                        : deviceInfo.screenWidth * 0.02,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     getIt<AppRouter>().pushReplacement(
@@ -269,9 +320,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.surface
-                                        : Colors.white,
+                                    backgroundColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.surface
+                                            : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         deviceInfo.screenWidth * 0.05,
@@ -286,8 +341,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                     child: Text(
                                       context.tr('sign in'),
                                       style: TextStyle(
-                                        color:  Theme.of(context).brightness == Brightness.dark ? Colors.white :
-                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .withOpacity(0.8),
                                         fontSize: deviceInfo.screenWidth * 0.04,
                                       ),
                                     ),
@@ -370,7 +431,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               Center(
                                 child: RichText(
                                   text: TextSpan(
-                                    text: context.tr('Already have an account?'),
+                                    text: context.tr(
+                                      'Already have an account?',
+                                    ),
                                     style: TextStyle(color: Colors.grey[600]),
                                     children: [
                                       TextSpan(
@@ -378,7 +441,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:

@@ -39,9 +39,9 @@ class ContactRepository extends BaseRepository {
                 },
               )
               .toList();
-
+      print('Phone numbers: ${phoneNumbers}');
       final usersSnapshot = await firestore.collection('users').get();
-      print('Users snapshot: ${usersSnapshot.docs.length}');
+
       final registeredUsers =
           usersSnapshot.docs
               .map((doc) => UserModel.fromFirestore(doc))
@@ -50,12 +50,10 @@ class ContactRepository extends BaseRepository {
       final matchedContacts =
           phoneNumbers
               .where((contact) {
-                String phoneNumber = contact["phoneNumber"].toString();
-
-                if (phoneNumber.startsWith("+20")) {
-                  phoneNumber = phoneNumber.substring(3);
-                }
-
+                String phoneNumber = formatEgyptianPhoneNumber(
+                  contact["phoneNumber"].toString(),
+                );
+                print('Phone number: $phoneNumber');
                 return registeredUsers.any(
                   (user) =>
                       user.phoneNumber == phoneNumber &&
@@ -63,16 +61,16 @@ class ContactRepository extends BaseRepository {
                 );
               })
               .map((contact) {
-                String phoneNumber = contact["phoneNumber"].toString();
-
-                if (phoneNumber.startsWith("+20")) {
-                  phoneNumber = phoneNumber.substring(3);
-                }
+                String phoneNumber = formatEgyptianPhoneNumber(
+                  contact["phoneNumber"].toString(),
+                );
 
                 final registeredUser = registeredUsers.firstWhere(
                   (user) => user.phoneNumber == phoneNumber,
                 );
-
+                print(
+                  "Registered user: ${registeredUser.uid} - ${registeredUser.phoneNumber}",
+                );
                 return {
                   'id': registeredUser.uid,
                   'name': contact['name'],
@@ -86,5 +84,39 @@ class ContactRepository extends BaseRepository {
       print('Error getting registered contacts: $e');
       return [];
     }
+  }
+
+  String formatEgyptianPhoneNumber(String phoneNumber) {
+    // Remove all non-digit characters except the plus sign
+    phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
+
+    // Handle international format with +20
+    if (phoneNumber.startsWith("+20")) {
+      return phoneNumber.substring(3, phoneNumber.length);
+    }
+    if (phoneNumber.startsWith("+20") && phoneNumber.length == 13) {
+      return phoneNumber.substring(2, phoneNumber.length);
+    }
+
+    // Handle international format with 0020
+    if (phoneNumber.startsWith("0020")) {
+      return phoneNumber.substring(4);
+    }
+
+    // Handle local format starting with 0
+    if (phoneNumber.startsWith("0") && (phoneNumber.length == 11)) {
+      return phoneNumber;
+    }
+
+    // If it's already in the correct format (10 digits without prefix)
+    if (phoneNumber.length == 10 &&
+        (phoneNumber.startsWith("10") ||
+            phoneNumber.startsWith("11") ||
+            phoneNumber.startsWith("12") ||
+            phoneNumber.startsWith("15"))) {
+      return phoneNumber = "0$phoneNumber";
+    }
+
+    return phoneNumber;
   }
 }

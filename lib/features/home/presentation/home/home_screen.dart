@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
 import 'package:sign_wave_v3/core/localization/app_localizations.dart';
@@ -6,16 +7,12 @@ import 'package:sign_wave_v3/core/theming/styles.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:sign_wave_v3/features/home/presentation/profile/cubit/profile_cubit.dart';
-
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
 import '../../data/repo/contact_repository.dart';
 import '../../../../../core/services/di.dart';
-import '../../../auth/cubit/auth_cubit.dart';
-import '../../../auth/screens/auth/login_screen.dart';
 import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';
-import '../about/about_screen.dart';
 import '../translator/translator_screen.dart';
 import '../profile/profile_screen.dart';
 
@@ -175,6 +172,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Theme.of(context).brightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
+      ),
+    );
     return SafeArea(
       child: InfoWidget(
         builder: (context, deviceInfo) {

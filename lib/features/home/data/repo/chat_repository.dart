@@ -4,7 +4,7 @@ import 'package:sign_wave_v3/core/services/base_repository.dart'
     show BaseRepository;
 import 'package:sign_wave_v3/core/services/fcm_service.dart'
     show sendNotification;
-import '../../../../core/observer/app_life_cycle_observer.dart';
+import '../../../../core/helper/format_time_ago.dart';
 import '../../../../core/services/di.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../model/chat_message.dart';
@@ -108,7 +108,8 @@ class ChatRepository extends BaseRepository {
       final userData = await AuthRepository().getUserData(userId);
       try {
         print("fcm token 1111 $isReceiverOnline");
-        if (!isReceiverOnline) {
+        if (!isReceiverOnline &&
+            formatTimeAgo(userData.lastSeen.toString()) != 'just now') {
           sendNotification(
             body: message.content,
             token: fcmToken,

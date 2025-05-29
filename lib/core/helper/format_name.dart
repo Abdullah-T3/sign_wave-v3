@@ -6,6 +6,8 @@ String formatName(String name) {
       x++;
       if (x == 2) {
         result = name.substring(0, i);
+      } else {
+        result = name.substring(0, name.length);
       }
     }
   }

@@ -1,8 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-
 class TranslationResponse {
   final String formedText;
   final String mostCommonGesture;
@@ -95,28 +90,5 @@ class RawPrediction {
     } catch (e) {
       throw FormatException('Failed to parse RawPrediction: ${e.toString()}');
     }
-  }
-}
-
-class TranslatorService {
-  static const String _baseUrl = 'http://56.228.5.253:5000';
-  final dio = Dio();
-
-  Future<TranslationResponse> predictGestures(String videoPath) async {
-    // If videoPath is a file path, handle it accordingly
-    final File videoFile = File(videoPath);
-
-    // Create form data for the request
-    final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(
-        videoFile.path,
-        filename: videoFile.path.split('/').last,
-      ),
-    });
-
-    // Send the request and process the response
-    final response = await dio.post('$_baseUrl/predict', data: formData);
-
-    return TranslationResponse.fromJson(response.data);
   }
 }

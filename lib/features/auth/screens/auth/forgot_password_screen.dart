@@ -97,6 +97,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             }
           },
           builder: (context, state) {
+            final local =
+                context.read<LocalizationCubit>().state.locale.languageCode;
             return SafeArea(
               child: Scaffold(
                 body: Form(
@@ -110,9 +112,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           width: deviceInfo.screenWidth,
                           height: deviceInfo.screenHeight * 0.3,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Theme.of(context).colorScheme.primary
-                                : ColorsManager.primaryGridColor,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Theme.of(context).colorScheme.primary
+                                    : ColorsManager.primaryGridColor,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(
                                 deviceInfo.screenWidth * 0.1,
@@ -124,61 +127,93 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: Theme.of(context).brightness == Brightness.dark
-                                  ? [
-                                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                                      Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                                    ]
-                                  : [
-                                      Colors.blue.shade600,
-                                      Colors.blue.shade300,
-                                    ],
+                              colors:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? [
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.8),
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.5),
+                                      ]
+                                      : [
+                                        Colors.blue.shade600,
+                                        Colors.blue.shade300,
+                                      ],
                             ),
                           ),
                           child: Stack(
                             children: [
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.03,
-                                right: deviceInfo.screenWidth * 0.05,
+                                right:
+                                    local == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.83,
                                 child: Row(
                                   children: [
                                     Row(
                                       children: [
                                         Text(
-                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
+                                          context
+                                              .read<LocalizationCubit>()
+                                              .state
+                                              .locale
+                                              .languageCode
+                                              .toUpperCase(),
                                           style: TextStyle(
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface
+                                                    : Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
+                                          onPressed:
+                                              () =>
+                                                  context
+                                                      .read<LocalizationCubit>()
+                                                      .toggleLocale(),
                                           icon: Icon(
                                             Icons.language,
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface
+                                                    : Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    
                                   ],
                                 ),
                               ),
-                            
+
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
-                                left: deviceInfo.screenWidth * 0.05,
+                                left:
+                                    local == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.36,
                                 child: Text(
                                   context.tr("Reset Password"),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.065,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -188,13 +223,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               // Subtitle: "We'll send you a reset link"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.19,
-                                left: deviceInfo.screenWidth * 0.05,
+                                left:
+                                    local == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.06,
                                 child: Text(
                                   context.tr("We'll send you a reset link"),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.045,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -203,8 +245,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                               // "Back to Login" Button
                               Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                right: deviceInfo.screenWidth * 0.05,
+                                top: deviceInfo.screenHeight * 0.08,
+                                right:
+                                    local == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.69,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     getIt<AppRouter>().pushReplacement(
@@ -212,12 +257,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.surface
-                                        : Colors.white,
+                                    backgroundColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.surface
+                                            : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
-                                        deviceInfo.screenWidth * 0.1,
+                                        deviceInfo.screenWidth * 0.05,
                                       ),
                                     ),
                                   ),
@@ -229,9 +278,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     child: Text(
                                       context.tr('login'),
                                       style: TextStyle(
-                                        color:  Theme.of(context).brightness == Brightness.dark ? Colors.white :
-                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                                        fontSize: deviceInfo.screenWidth * 0.035,
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .withOpacity(0.8),
+                                        fontSize:
+                                            deviceInfo.screenWidth * 0.035,
                                       ),
                                     ),
                                   ),
@@ -265,7 +321,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                               // Instructions text
                               Text(
-                                context.tr("Enter the email address associated with your account. We'll send you a link to reset your password."),
+                                context.tr(
+                                  "Enter the email address associated with your account. We'll send you a link to reset your password.",
+                                ),
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: deviceInfo.screenWidth * 0.04,
@@ -288,7 +346,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                        :  Text(
+                                        : Text(
                                           context.tr('send_reset_link'),
                                           style: TextStyle(color: Colors.white),
                                         ),
@@ -308,7 +366,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:

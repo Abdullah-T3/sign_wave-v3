@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../../../../core/services/translator_service.dart';
+import '../../../../../core/services/translator/model/translator_model.dart';
+import '../../../../../core/services/translator/translator_service.dart';
 
 part 'translator_state.dart';
 
@@ -38,6 +41,7 @@ class TranslatorCubit extends Cubit<TranslatorState> {
 
       // Convert to base64 or whatever format your API expects
       final response = await _translatorService.predictGestures(videoFile.path);
+      log(response.mostCommonGesture.toString());
 
       emit(
         TranslatorSuccess(

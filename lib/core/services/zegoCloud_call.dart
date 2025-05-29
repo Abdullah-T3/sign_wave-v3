@@ -1,6 +1,9 @@
+import 'package:sign_wave_v3/core/services/fcm_service.dart';
+import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
+import '../../features/home/data/repo/chat_repository.dart';
 import '../common/custom_avatar_builder.dart';
 import '../helper/dotenv/dot_env_helper.dart';
 
@@ -8,6 +11,9 @@ void onUserLogout() {
   ZegoUIKitPrebuiltCallInvitationService().uninit();
 }
 
+late ZegoCallUser _lastCaller;
+// ignore: unused_element
+String? _lastCallId;
 Future<void> onUserLogin(String userId, String userName) async {
   /// 4/5. initialized ZegoUIKitPrebuiltCallInvitationService when account is logged in or re-logged in
   await ZegoUIKitPrebuiltCallInvitationService().init(
@@ -22,35 +28,9 @@ Future<void> onUserLogin(String userId, String userName) async {
         ZegoCallInvitationPermission.microphone,
       ],
     ),
-    invitationEvents: ZegoUIKitPrebuiltCallInvitationEvents(
-      onIncomingCallAcceptButtonPressed: () {
-        ZegoUIKit().turnCameraOn(true);
-      },
-    ),
+    invitationEvents: invitationEvents,
 
-    notificationConfig: ZegoCallInvitationNotificationConfig(
-      androidNotificationConfig: ZegoCallAndroidNotificationConfig(
-        showFullScreen: true,
-        certificateIndex: ZegoSignalingPluginMultiCertificate.firstCertificate,
-        fullScreenBackgroundAssetURL: 'assets/images/call.png',
-        callChannel: ZegoCallAndroidNotificationChannelConfig(
-          channelID: "ZegoUIKit",
-          channelName: "Call Notifications",
-          sound: "call",
-          icon: "call",
-        ),
-        missedCallChannel: ZegoCallAndroidNotificationChannelConfig(
-          channelID: "MissedCall",
-          channelName: "Missed Call",
-          sound: "missed_call",
-          icon: "missed_call",
-          vibrate: false,
-        ),
-      ),
-      iOSNotificationConfig: ZegoCallIOSNotificationConfig(
-        systemCallingIconName: 'CallKitIcon',
-      ),
-    ),
+    notificationConfig: notificationConfig,
     requireConfig: (ZegoCallInvitationData data) {
       final config =
           (data.invitees.length > 1)
@@ -81,3 +61,72 @@ Future<void> onUserLogin(String userId, String userName) async {
     },
   );
 }
+
+ZegoCallInvitationNotificationConfig notificationConfig =
+    ZegoCallInvitationNotificationConfig(
+      androidNotificationConfig: ZegoCallAndroidNotificationConfig(
+        showFullScreen: true,
+        certificateIndex: ZegoSignalingPluginMultiCertificate.firstCertificate,
+        fullScreenBackgroundAssetURL: 'assets/images/call.png',
+        callChannel: ZegoCallAndroidNotificationChannelConfig(
+          channelID: "ZegoUIKit",
+          channelName: "Call Notifications",
+          sound: "call",
+          icon: "call",
+        ),
+        missedCallChannel: ZegoCallAndroidNotificationChannelConfig(
+          channelID: "MissedCall",
+          channelName: "Missed Call",
+          sound: "missed_call",
+          icon: "missed_call",
+          vibrate: false,
+        ),
+      ),
+      iOSNotificationConfig: ZegoCallIOSNotificationConfig(
+        systemCallingIconName: 'CallKitIcon',
+      ),
+    );
+
+ZegoUIKitPrebuiltCallInvitationEvents invitationEvents =
+    ZegoUIKitPrebuiltCallInvitationEvents(
+      onIncomingCallDeclineButtonPressed: () {
+        ChatRepository().getFcmToken(_lastCaller.id).then((callerFcmToken) {
+          sendNotification(
+            token: callerFcmToken,
+            title: "Call Declined",
+            body: "${_lastCaller.name} declined the video call",
+            data: {},
+          );
+        });
+      },
+      onIncomingCallTimeout: (String callID, ZegoCallUser caller) {
+        NotificationService().showNotification(
+          title: "Missed Call",
+          body: "You missed a video call from ${caller.name}",
+        );
+      },
+      onIncomingCallCanceled: (
+        String callID,
+        ZegoCallUser caller,
+        String extendedData,
+      ) {
+        NotificationService().showNotification(
+          title: "Missed Call",
+          body: "You missed a video call from ${caller.name}",
+          payload: "MissedCall",
+        );
+      },
+      onIncomingCallReceived: (
+        String callID,
+        ZegoCallUser caller,
+        ZegoCallInvitationType type,
+        List<ZegoCallUser> invitees,
+        String extendedData,
+      ) {
+        _lastCaller = caller;
+        _lastCallId = callID;
+      },
+      onIncomingCallAcceptButtonPressed: () {
+        ZegoUIKit().turnCameraOn(true);
+      },
+    );

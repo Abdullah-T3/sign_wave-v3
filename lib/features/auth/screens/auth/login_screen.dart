@@ -63,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-
   Future<void> handleSignIn(DeviceInfo deviceInfo, BuildContext context) async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() ?? false) {
@@ -72,8 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
-
-
       } catch (e) {
         CherryToastMsgs.CherryToastError(
           info: deviceInfo,
@@ -128,6 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
             }
           },
           builder: (context, state) {
+            final locale =
+                context.read<LocalizationCubit>().state.locale.languageCode;
+
             return SafeArea(
               child: Scaffold(
                 body: Form(
@@ -153,61 +153,94 @@ class _LoginScreenState extends State<LoginScreen> {
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: Theme.of(context).brightness == Brightness.dark
-                                ? [
-                                    Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                                    Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                                  ]
-                                : [
-                                    Colors.blue.shade600,
-                                    Colors.blue.shade300,
-                                  ],
+                              colors:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? [
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.8),
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.primary.withOpacity(0.5),
+                                      ]
+                                      : [
+                                        Colors.blue.shade600,
+                                        Colors.blue.shade300,
+                                      ],
                             ),
                           ),
                           child: Stack(
                             children: [
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.03,
-                                right: deviceInfo.screenWidth * 0.05,
+                                right:
+                                    locale == 'en'
+                                        ? deviceInfo.screenWidth * 0.01
+                                        : deviceInfo.screenWidth * 0.835,
                                 child: Row(
                                   children: [
                                     Row(
                                       children: [
                                         Text(
-                                          context.read<LocalizationCubit>().state.locale.languageCode.toUpperCase(),
+                                          context
+                                              .read<LocalizationCubit>()
+                                              .state
+                                              .locale
+                                              .languageCode
+                                              .toUpperCase(),
                                           style: TextStyle(
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface
+                                                    : Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                            fontSize:
+                                                deviceInfo.screenWidth * 0.036,
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () => context.read<LocalizationCubit>().toggleLocale(),
+                                          onPressed:
+                                              () =>
+                                                  context
+                                                      .read<LocalizationCubit>()
+                                                      .toggleLocale(),
                                           icon: Icon(
                                             Icons.language,
-                                            color: Theme.of(context).brightness == Brightness.dark
-                                              ? Theme.of(context).colorScheme.onSurface
-                                              : Colors.white,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface
+                                                    : Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    
                                   ],
                                 ),
                               ),
                               // Title: "Sign In"
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
-                                left: deviceInfo.screenWidth * 0.05,
+                                left:
+                                    locale == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.46,
                                 child: Text(
                                   context.tr('sign in'),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.08,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -216,14 +249,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               // Subtitle: "Welcome Back to Sign Wave"
                               Positioned(
-                                top: deviceInfo.screenHeight * 0.18,
-                                left: deviceInfo.screenWidth * 0.05,
+                                top: deviceInfo.screenHeight * 0.2,
+                                left:
+                                    locale == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.35,
                                 child: Text(
                                   context.tr('Welcome Back to Sign Wave'),
                                   style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
-                                        ? Theme.of(context).colorScheme.onSurface
-                                        : Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface
+                                            : Colors.white,
                                     fontSize: deviceInfo.screenWidth * 0.05,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -233,7 +273,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               // "Sign Up" Button
                               Positioned(
                                 top: deviceInfo.screenHeight * 0.1,
-                                right: deviceInfo.screenWidth * 0.05,
+                                right:
+                                    locale == 'en'
+                                        ? deviceInfo.screenWidth * 0.05
+                                        : deviceInfo.screenWidth * 0.58,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     getIt<AppRouter>().pushReplacement(
@@ -241,9 +284,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                                        ? Theme.of(context).colorScheme.surface
-                                        : Colors.white,
+                                    backgroundColor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(
+                                              context,
+                                            ).colorScheme.surface
+                                            : Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         deviceInfo.screenWidth * 0.05,
@@ -258,8 +305,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: Text(
                                       context.tr('sign up'),
                                       style: TextStyle(
-                                        color:   Theme.of(context).brightness == Brightness.dark ? Colors.white :
-                                        Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .withOpacity(0.8),
                                         fontSize: deviceInfo.screenWidth * 0.04,
                                       ),
                                     ),
@@ -321,7 +374,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     context.tr('forgot password?'),
                                     style: TextStyle(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -337,7 +391,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? const CircularProgressIndicator(
                                           color: Colors.white,
                                         )
-                                        :  Text(
+                                        : Text(
                                           context.tr('login'),
                                           style: TextStyle(color: Colors.white),
                                         ),
@@ -345,20 +399,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(height: deviceInfo.screenHeight * 0.02),
                               Center(
                                 child: RichText(
-
                                   text: TextSpan(
-                                    text: context.tr("don't have an account?" ),
+                                    text: context.tr("don't have an account?"),
 
-                                    style: TextStyle(color: Theme.of(context).brightness == Brightness.dark 
-                                        ? Colors.grey[400] 
-                                        : Colors.grey[600]),
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey[400]
+                                              : Colors.grey[600],
+                                    ),
                                     children: [
                                       TextSpan(
                                         text: context.tr('sign up'),
                                         style: Theme.of(
                                           context,
                                         ).textTheme.bodyLarge?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         recognizer:
@@ -373,6 +433,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
+
                               // MaterialButton(
                               //   onPressed: () async {
                               //     await sendNotification(
@@ -389,7 +450,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               //   },
                               //   child: Text("Send Notification"),
                               // ),
-
                             ],
                           ),
                         ),

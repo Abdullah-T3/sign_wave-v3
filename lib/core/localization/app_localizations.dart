@@ -33,6 +33,7 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
+      "app_version": "App Version 1.0.0",
       "reset": 'Reset',
       "No translation available yet. Start translating to see results":
           "No translation available yet. Start translating to see results",
@@ -117,6 +118,7 @@ class AppLocalizations {
       'type_a_message': 'Type a message',
     },
     'ar': {
+      "app_version": "1.0.0 نسخة التطبيق",
       "reset": 'إعادة تعيين',
       "No translation available yet. Start translating to see results":
           "لا توجد ترجمة متاحة بعد. ابدأ في الترجمة لرؤية النتائج",
