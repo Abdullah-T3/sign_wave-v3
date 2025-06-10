@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
+import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
+import 'package:sign_wave_v3/features/auth/screens/cubit/auth_state.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'core/observer/app_life_cycle_observer.dart';
@@ -16,8 +18,7 @@ import 'core/localization/cubit/localization_cubit.dart';
 import 'core/theme/cubit/theme_cubit.dart';
 import 'features/home/data/repo/chat_repository.dart';
 import 'core/services/di.dart';
-import 'features/auth/cubit/auth_cubit.dart';
-import 'features/auth/cubit/auth_state.dart';
+
 import 'features/home/presentation/home/home_screen.dart';
 import 'features/auth/screens/auth/login_screen.dart';
 import 'theme/app_theme.dart';

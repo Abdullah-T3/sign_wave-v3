@@ -5,14 +5,15 @@ import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/auth/login_screen.dart'
     show LoginScreen;
+import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
+import 'package:sign_wave_v3/features/auth/screens/cubit/auth_state.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/common/cherryToast/CherryToastMsgs.dart';
 import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
 import '../../../../core/theming/colors.dart';
-import '../../cubit/auth_cubit.dart';
-import '../../cubit/auth_state.dart';
+
 import '../../../home/presentation/home/home_screen.dart';
 import '../../../../../router/app_router.dart';
 

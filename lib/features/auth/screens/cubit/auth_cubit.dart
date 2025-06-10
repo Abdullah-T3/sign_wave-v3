@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/services/zegoCloud_call.dart';
-import '../data/repositories/auth_repository.dart';
+import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
+import 'package:sign_wave_v3/features/auth/data/repositories/auth_repository.dart';
+
 import 'auth_state.dart';
 
 import '../../../../core/services/di.dart';
