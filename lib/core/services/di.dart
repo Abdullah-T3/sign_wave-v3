@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
@@ -15,6 +16,8 @@ import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/home/data/repo/chat_repository.dart';
 import '../../features/home/data/repo/contact_repository.dart';
 import '../../router/app_router.dart';
+import '../localization/cubit/localization_cubit.dart';
+import '../theme/cubit/theme_cubit.dart' show ThemeCubit;
 // Add these imports
 
 final getIt = GetIt.instance;
@@ -26,6 +29,8 @@ Future<void> setupServiceLocator() async {
   await _firebaseMessaging.setForegroundNotificationPresentationOptions();
   await NotificationService().initNotification();
   Dio dio = Dio();
+  final prefs = await SharedPreferences.getInstance();
+
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,
   );
@@ -35,6 +40,8 @@ Future<void> setupServiceLocator() async {
 
   print("FCM Token: $fcmToken");
 
+  getIt.registerSingleton<ThemeCubit>(ThemeCubit(prefs: prefs));
+  getIt.registerSingleton<LocalizationCubit>(LocalizationCubit(prefs: prefs));
   //-------------------------------------------------//
   getIt.registerLazySingleton<Dio>(() => dio);
   getIt.registerLazySingleton(() => AppRouter());

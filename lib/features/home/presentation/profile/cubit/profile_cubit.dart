@@ -44,7 +44,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(status: ProfileStatus.updating));
 
     try {
-
       await _authRepository.updateUserData(updatedUser);
       emit(
         state.copyWith(

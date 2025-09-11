@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sign_wave_v3/core/Responsive/Functions/get_device_type.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
 import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/core/localization/cubit/localization_cubit.dart';
@@ -70,334 +71,102 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(
-      builder: (context, deviceInfo) {
-        return BlocConsumer<AuthCubit, AuthState>(
-          bloc: getIt<AuthCubit>(),
-          listener: (context, state) {
-            if (state.status == AuthStatus.passwordResetEmailSent) {
-              CherryToastMsgs.CherryToastSuccess(
-                info: deviceInfo,
-                context: context,
-                title: "Success",
-                description:
-                    "Password reset email sent. Please check your inbox.",
-              ).show(context);
-              // Navigate back to login screen after a short delay
-              Future.delayed(const Duration(seconds: 2), () {
-                getIt<AppRouter>().pushReplacement(const LoginScreen());
-              });
-            } else if (state.status == AuthStatus.error &&
-                state.error != null) {
-              CherryToastMsgs.CherryToastError(
-                info: deviceInfo,
-                context: context,
-                title: "Error",
-                description: "${state.error}",
-              ).show(context);
-            }
-          },
-          builder: (context, state) {
-            final local =
-                context.read<LocalizationCubit>().state.locale.languageCode;
-            return SafeArea(
-              child: Scaffold(
-                body: Form(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final mediaQuery = MediaQuery.of(context);
+          final deviceInfo = DeviceInfo(
+            orientation: mediaQuery.orientation,
+            deviceType: getDeviceType(mediaQuery),
+            screenWidth: mediaQuery.size.width,
+            screenHeight: mediaQuery.size.height,
+            localWidth: constraints.maxWidth,
+            localHeight: constraints.maxHeight,
+          );
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Form(
                   key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top Section with Gradient Background
-                        Container(
-                          width: deviceInfo.screenWidth,
-                          height: deviceInfo.screenHeight * 0.3,
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Theme.of(context).colorScheme.primary
-                                    : ColorsManager.primaryGridColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text(
+                        'Forgot password?',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        "Enter the email associated with your account and we'll send an email with instructions to reset your password.",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
+                      CustomTextField(
+                        controller: emailController,
+                        hintText: 'Email',
+                        focusNode: _emailFocus,
+                        validator: _validateEmail,
+                      ),
+                      const SizedBox(height: 24),
+                      CustomButton(
+                        onPressed:
+                            () => handleResetPassword(deviceInfo, context),
+                        text: 'Reset Password',
+                        child: BlocBuilder<AuthCubit, AuthState>(
+                          bloc: getIt<AuthCubit>(),
+                          builder: (context, state) {
+                            if (state.status == AuthStatus.loading) {
+                              return CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              );
+                            }
+                            return Text(
+                              'Reset Password',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
-                              bottomRight: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
-                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            getIt<AppRouter>().pushReplacement(
+                              const LoginScreen(),
+                            );
+                          },
+                          child: Text(
+                            'Back to Login',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
                             ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? [
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.8),
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.5),
-                                      ]
-                                      : [
-                                        Colors.blue.shade600,
-                                        Colors.blue.shade300,
-                                      ],
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.03,
-                                right:
-                                    local == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.83,
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          context
-                                              .read<LocalizationCubit>()
-                                              .state
-                                              .locale
-                                              .languageCode
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface
-                                                    : Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed:
-                                              () =>
-                                                  context
-                                                      .read<LocalizationCubit>()
-                                                      .toggleLocale(),
-                                          icon: Icon(
-                                            Icons.language,
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface
-                                                    : Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                left:
-                                    local == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.36,
-                                child: Text(
-                                  context.tr("Reset Password"),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.065,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              // Subtitle: "We'll send you a reset link"
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.19,
-                                left:
-                                    local == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.06,
-                                child: Text(
-                                  context.tr("We'll send you a reset link"),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.045,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-
-                              // "Back to Login" Button
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.08,
-                                right:
-                                    local == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.69,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    getIt<AppRouter>().pushReplacement(
-                                      const LoginScreen(),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.surface
-                                            : Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        deviceInfo.screenWidth * 0.05,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: deviceInfo.screenWidth * 0.05,
-                                      vertical: deviceInfo.screenHeight * 0.01,
-                                    ),
-                                    child: Text(
-                                      context.tr('login'),
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .primary
-                                                    .withOpacity(0.8),
-                                        fontSize:
-                                            deviceInfo.screenWidth * 0.035,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
                         ),
-
-                        // Form Fields
-                        SizedBox(height: deviceInfo.screenHeight * 0.05),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.01,
-                          ),
-                          child: Column(
-                            children: [
-                              // Email field
-                              CustomTextField(
-                                controller: emailController,
-                                hintText: context.tr('email'),
-                                focusNode: _emailFocus,
-                                validator: _validateEmail,
-                                prefixIcon: const Icon(Icons.email_outlined),
-                              ),
-
-                              SizedBox(height: deviceInfo.screenHeight * 0.03),
-
-                              // Instructions text
-                              Text(
-                                context.tr(
-                                  "Enter the email address associated with your account. We'll send you a link to reset your password.",
-                                ),
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: deviceInfo.screenWidth * 0.04,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              SizedBox(height: deviceInfo.screenHeight * 0.1),
-
-                              // Reset Password Button
-                              CustomButton(
-                                onPressed:
-                                    () => handleResetPassword(
-                                      deviceInfo,
-                                      context,
-                                    ),
-                                text: context.tr('send_reset_link'),
-                                child:
-                                    state.status == AuthStatus.loading
-                                        ? const CircularProgressIndicator(
-                                          color: Colors.white,
-                                        )
-                                        : Text(
-                                          context.tr('send_reset_link'),
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                              ),
-
-                              SizedBox(height: deviceInfo.screenHeight * 0.02),
-
-                              // Back to login link
-                              Center(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: context.tr('back_to_login'),
-                                    style: TextStyle(color: Colors.grey[600]),
-                                    children: [
-                                      TextSpan(
-                                        text: context.tr('login'),
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        recognizer:
-                                            TapGestureRecognizer()
-                                              ..onTap = () {
-                                                getIt<AppRouter>()
-                                                    .pushReplacement(
-                                                      const LoginScreen(),
-                                                    );
-                                              },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 }

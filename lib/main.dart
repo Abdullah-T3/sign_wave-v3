@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
 import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
@@ -22,15 +21,10 @@ import 'core/services/di.dart';
 import 'features/home/presentation/home/home_screen.dart';
 import 'features/auth/screens/auth/login_screen.dart';
 import 'theme/app_theme.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 Future<void> _initializeApp() async {
   await Firebase.initializeApp();
-  final prefs = await SharedPreferences.getInstance();
   await setupServiceLocator();
-
-  getIt.registerSingleton<ThemeCubit>(ThemeCubit(prefs: prefs));
-  getIt.registerSingleton<LocalizationCubit>(LocalizationCubit(prefs: prefs));
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

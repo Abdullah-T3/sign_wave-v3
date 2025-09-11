@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
 import 'package:sign_wave_v3/core/localization/app_localizations.dart';
 import 'package:sign_wave_v3/core/theming/styles.dart';
+import 'package:sign_wave_v3/features/home/presentation/about/about_screen.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:sign_wave_v3/features/home/presentation/profile/cubit/profile_cubit.dart';
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const ProfileScreen(),
         );
       case 3:
-        return const Center(child: Text("Page not found"));
+        return const AboutScreen();
       default:
         return const Center(child: Text("Page not found"));
     }
@@ -235,6 +236,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person),
                   label: context.tr('profile'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.info),
+                  label: context.tr('about'),
                 ),
               ],
               selectedItemColor: Colors.blue,

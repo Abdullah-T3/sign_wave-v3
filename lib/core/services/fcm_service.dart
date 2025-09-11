@@ -33,6 +33,16 @@ class FcmService {
     });
   }
 }
+// register login logout
+//fcm token (device abdullah =  )
+
+// logout auth token (fcm token = "")
+
+// ahmed fcm token
+// id = 22
+
+//auth token
+//access token
 
 // In the getAccessToken function
 Future<String> getAccessToken() async {
@@ -60,7 +70,6 @@ Future<void> sendNotification({
     print('Error: FCM token is empty.');
     return;
   }
-  // Optional: trim the token
   token = token.trim();
 
   final String accessToken = await getAccessToken();
@@ -78,7 +87,7 @@ Future<void> sendNotification({
       ),
       data: {
         'message': {
-          'token': token,
+          'token': "s;lajdlasdasnsfa;asf",
           'notification': {'title': title, 'body': body},
           'data': data,
           'android': {

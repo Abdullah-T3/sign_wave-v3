@@ -13,6 +13,8 @@ import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
 import '../../../../core/theming/colors.dart';
+import '../../../../../core/Responsive/Functions/get_device_type.dart';
+import '../../../../../core/Responsive/Models/device_info.dart';
 
 import '../../../home/presentation/home/home_screen.dart';
 import '../../../../../router/app_router.dart';
@@ -128,348 +130,137 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(
-      builder: (context, deviceInfo) {
-        final isLTR = Directionality.of(context) == TextDirection.ltr;
-
-        return BlocConsumer<AuthCubit, AuthState>(
-          bloc: getIt<AuthCubit>(),
-          listener: (context, state) {
-            if (state.status == AuthStatus.authenticated) {
-              getIt<AppRouter>().pushAndRemoveUntil(const HomeScreen());
-            } else if (state.status == AuthStatus.error &&
-                state.error != null) {
-              CherryToastMsgs.CherryToastError(
-                info: deviceInfo,
-                context: context,
-                title: "Error",
-                description: state.error!,
-              ).show(context);
-            } else if (state.status == AuthStatus.emailUnverified) {
-              CherryToastMsgs.CherryToastError(
-                info: deviceInfo,
-                context: context,
-                title: context.tr('error'),
-                description: context.tr("Please verify your email first"),
-              ).show(context);
-            }
-            getIt<AppRouter>().pushAndRemoveUntil(const LoginScreen());
-          },
-          builder: (context, state) {
-            return SafeArea(
-              child: Scaffold(
-                body: Form(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final mediaQuery = MediaQuery.of(context);
+          final deviceInfo = DeviceInfo(
+            orientation: mediaQuery.orientation,
+            deviceType: getDeviceType(mediaQuery),
+            screenWidth: mediaQuery.size.width,
+            screenHeight: mediaQuery.size.height,
+            localWidth: constraints.maxWidth,
+            localHeight: constraints.maxHeight,
+          );
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Form(
                   key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top Section with Gradient Background
-                        Container(
-                          width: deviceInfo.screenWidth,
-                          height: deviceInfo.screenHeight * 0.3,
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Theme.of(context).colorScheme.primary
-                                    : ColorsManager.primaryGridColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
-                              ),
-                              bottomRight: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
-                              ),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? [
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.8),
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.5),
-                                      ]
-                                      : [
-                                        Colors.blue.shade600,
-                                        Colors.blue.shade300,
-                                      ],
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.03,
-                                right:
-                                    isLTR
-                                        ? deviceInfo.screenWidth * 0.01
-                                        : null,
-                                left:
-                                    isLTR
-                                        ? null
-                                        : deviceInfo.screenWidth * 0.01,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      context
-                                          .read<LocalizationCubit>()
-                                          .state
-                                          .locale
-                                          .languageCode
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurface
-                                                : Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize:
-                                            deviceInfo.screenWidth * 0.036,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed:
-                                          () =>
-                                              context
-                                                  .read<LocalizationCubit>()
-                                                  .toggleLocale(),
-                                      icon: Icon(
-                                        Icons.language,
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurface
-                                                : Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Title: "Sign Up"
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                left:
-                                    isLTR
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : null,
-                                right:
-                                    isLTR ? null : deviceInfo.screenWidth * 0.1,
-                                child: Text(
-                                  context.tr('sign up'),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.07,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              // Subtitle: "Welcome Back to Sign Wave"
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.18,
-                                left:
-                                    isLTR
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : null,
-                                right:
-                                    isLTR ? null : deviceInfo.screenWidth * 0.1,
-                                child: Text(
-                                  context.tr('Welcome to Sign Wave'),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.05,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-
-                              // "Sign In" Button
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                right:
-                                    isLTR ? deviceInfo.screenWidth * 0.1 : null,
-                                left:
-                                    isLTR
-                                        ? null
-                                        : deviceInfo.screenWidth * 0.02,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    getIt<AppRouter>().pushReplacement(
-                                      const LoginScreen(),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.surface
-                                            : Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        deviceInfo.screenWidth * 0.05,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: deviceInfo.screenWidth * 0.05,
-                                      vertical: deviceInfo.screenHeight * 0.01,
-                                    ),
-                                    child: Text(
-                                      context.tr('sign in'),
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .primary
-                                                    .withOpacity(0.8),
-                                        fontSize: deviceInfo.screenWidth * 0.04,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text(
+                        'Sign up',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
+                      CustomTextField(
+                        controller: nameController,
+                        focusNode: _nameFocus,
+                        hintText: 'Name',
+                        validator: _validateName,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: usernameController,
+                        hintText: 'Username',
+                        focusNode: _usernameFocus,
+                        validator: _validateUsername,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: emailController,
+                        hintText: 'Email',
+                        focusNode: _emailFocus,
+                        validator: _validateEmail,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: phoneController,
+                        focusNode: _phoneFocus,
+                        validator: _validatePhone,
+                        hintText: 'Phone',
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: passwordController,
+                        obscureText: !_isPasswordVisible,
+                        hintText: 'Password',
+                        focusNode: _passwordFocus,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
-
-                        // Form Fields
-                        SizedBox(height: deviceInfo.screenHeight * 0.05),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.01,
-                          ),
-                          child: Column(
-                            children: [
-                              CustomTextField(
-                                controller: nameController,
-                                focusNode: _nameFocus,
-                                hintText: context.tr('name'),
-                                validator: _validateName,
-                                prefixIcon: const Icon(Icons.person_outline),
+                        validator: _validatePassword,
+                      ),
+                      const SizedBox(height: 24),
+                      CustomButton(
+                        onPressed: handleSignUp,
+                        text: 'Sign Up',
+                        child: BlocBuilder<AuthCubit, AuthState>(
+                          bloc: getIt<AuthCubit>(),
+                          builder: (context, state) {
+                            if (state.status == AuthStatus.loading) {
+                              return CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              );
+                            }
+                            return Text(
+                              'Sign Up',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.015),
-                              CustomTextField(
-                                controller: usernameController,
-                                hintText: context.tr('username'),
-                                focusNode: _usernameFocus,
-                                validator: _validateUsername,
-                                prefixIcon: const Icon(Icons.alternate_email),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.015),
-                              CustomTextField(
-                                controller: emailController,
-                                hintText: context.tr('email'),
-                                focusNode: _emailFocus,
-                                validator: _validateEmail,
-                                prefixIcon: const Icon(Icons.email_outlined),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.015),
-                              CustomTextField(
-                                controller: phoneController,
-                                focusNode: _phoneFocus,
-                                validator: _validatePhone,
-                                hintText: context.tr('phone'),
-                                prefixIcon: const Icon(Icons.phone_outlined),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.015),
-                              CustomTextField(
-                                controller: passwordController,
-                                obscureText: !_isPasswordVisible,
-                                hintText: context.tr('password'),
-                                focusNode: _passwordFocus,
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
-                                ),
-                                validator: _validatePassword,
-                                prefixIcon: const Icon(Icons.lock_outline),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.05),
-                              CustomButton(
-                                onPressed: handleSignUp,
-                                text: context.tr("create_account"),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.05),
-                              Center(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: context.tr(
-                                      'Already have an account?',
-                                    ),
-                                    style: TextStyle(color: Colors.grey[600]),
-                                    children: [
-                                      TextSpan(
-                                        text: context.tr("login"),
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        recognizer:
-                                            TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.pop(context);
-                                              },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            getIt<AppRouter>().pushReplacement(
+                              const LoginScreen(),
+                            );
+                          },
+                          child: Text(
+                            'Already have an account? Login',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 }

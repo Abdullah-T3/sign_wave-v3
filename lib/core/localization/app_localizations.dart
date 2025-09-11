@@ -34,6 +34,21 @@ class AppLocalizations {
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
       "app_version": "App Version 1.0.0",
+      "about_app": "About the App",
+      "about_app_description_1":
+          "Sign Wave Translator is an innovative mobile application designed to break down communication barriers between the deaf community and hearing individuals. Our app combines cutting-edge technology with user-friendly design to create a seamless sign language translation experience.",
+      "about_app_description_2":
+          "Using advanced computer vision and machine learning algorithms, Sign Wave Translator can interpret sign language gestures in real-time, converting them into text that can be easily understood by anyone. The app also supports text-to-sign language translation, making it a powerful two-way communication tool.",
+      "about_app_description_3":
+          "Whether you're a member of the deaf community, a sign language learner, or someone who frequently interacts with deaf individuals, Sign Wave Translator provides an accessible and efficient way to communicate effectively.",
+      "features": "Features",
+      "feature_realtime_messaging": "Real-time messaging",
+      "feature_sign_language": "Sign language translation",
+      "feature_user_friendly": "User-friendly interface",
+      "feature_secure_auth": "Secure authentication",
+      "contact_us": "Contact Us",
+      "contact_us_description": "For support or feedback, please contact us at",
+      "copyright": "© 2024 Sign Wave Translator. All rights reserved.",
       "reset": 'Reset',
       "No translation available yet. Start translating to see results":
           "No translation available yet. Start translating to see results",
@@ -119,6 +134,22 @@ class AppLocalizations {
     },
     'ar': {
       "app_version": "1.0.0 نسخة التطبيق",
+      "about_app": "عن التطبيق",
+      "about_app_description_1":
+          "Sign Wave Translator هو تطبيق جوال مبتكر مصمم لكسر حواجز التواصل بين مجتمع الصم والأفراد السامعين. يجمع تطبيقنا بين التكنولوجيا المتطورة والتصميم سهل الاستخدام لخلق تجربة ترجمة لغة الإشارة سلسة.",
+      "about_app_description_2":
+          "باستخدام خوارزميات رؤية الكمبيوتر المتقدمة وتعلم الآلة، يمكن لـ Sign Wave Translator تفسير إيماءات لغة الإشارة في الوقت الفعلي، وتحويلها إلى نص يمكن فهمه بسهولة من قبل أي شخص. كما يدعم التطبيق الترجمة من النص إلى لغة الإشارة، مما يجعله أداة تواصل قوية في كلا الاتجاهين.",
+      "about_app_description_3":
+          "سواء كنت من مجتمع الصم، أو متعلم لغة الإشارة، أو شخصًا يتفاعل بشكل متكرر مع الأفراد الصم، يوفر Sign Wave Translator طريقة سهلة وفعالة للتواصل.",
+      "features": "المميزات",
+      "feature_realtime_messaging": "المراسلة في الوقت الفعلي",
+      "feature_sign_language": "ترجمة لغة الإشارة",
+      "feature_user_friendly": "واجهة سهلة الاستخدام",
+      "feature_secure_auth": "مصادقة آمنة",
+      "contact_us": "اتصل بنا",
+      "contact_us_description":
+          "للحصول على الدعم أو إرسال ملاحظات، يرجى الاتصال بنا على",
+      "copyright": "© 2024 Sign Wave Translator. جميع الحقوق محفوظة.",
       "reset": 'إعادة تعيين',
       "No translation available yet. Start translating to see results":
           "لا توجد ترجمة متاحة بعد. ابدأ في الترجمة لرؤية النتائج",

@@ -13,6 +13,7 @@ import '../../../../../core/common/custom_button.dart';
 import '../../../../../core/common/custom_text_field.dart';
 import '../../../../../core/services/di.dart';
 import '../../../../core/theming/colors.dart';
+import '../../../../../core/Responsive/Functions/get_device_type.dart';
 
 import '../../../home/presentation/home/home_screen.dart';
 import 'signup_screen.dart';
@@ -87,382 +88,136 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(
-      builder: (context, deviceInfo) {
-        return BlocConsumer<AuthCubit, AuthState>(
-          bloc: getIt<AuthCubit>(),
-          listener: (context, state) {
-            print("state.status: ${state.status}");
-            if (state.status == AuthStatus.authenticated) {
-              CherryToastMsgs.CherryToastSuccess(
-                info: deviceInfo,
-                context: context,
-                title: context.tr('success'),
-                description: context.tr('successfully logged in'),
-              ).show(context);
-              getIt<AppRouter>().pushAndRemoveUntil(const HomeScreen());
-            } else if (state.status == AuthStatus.error &&
-                state.error != null) {
-              CherryToastMsgs.CherryToastError(
-                info: deviceInfo,
-                context: context,
-                title: "Error",
-                description: "${state.error}",
-              ).show(context);
-            } else if (state.status == AuthStatus.emailUnverified) {
-              CherryToastMsgs.CherryToastVerified(
-                info: deviceInfo,
-                context: context,
-                title: "Verification Required",
-                description: "Please verify your email first",
-              ).show(context);
-            } else if (state.status == AuthStatus.passwordResetEmailSent) {
-              CherryToastMsgs.CherryToastSuccess(
-                info: deviceInfo,
-                context: context,
-                title: "Success",
-                description: "Password reset email sent",
-              ).show(context);
-            }
-          },
-          builder: (context, state) {
-            final locale =
-                context.read<LocalizationCubit>().state.locale.languageCode;
-
-            return SafeArea(
-              child: Scaffold(
-                body: Form(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final mediaQuery = MediaQuery.of(context);
+          final deviceInfo = DeviceInfo(
+            orientation: mediaQuery.orientation,
+            deviceType: getDeviceType(mediaQuery),
+            screenWidth: mediaQuery.size.width,
+            screenHeight: mediaQuery.size.height,
+            localWidth: constraints.maxWidth,
+            localHeight: constraints.maxHeight,
+          );
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Form(
                   key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top Section with Gradient Background
-                        Container(
-                          width: deviceInfo.screenWidth,
-                          height: deviceInfo.screenHeight * 0.3,
-                          decoration: BoxDecoration(
-                            color: ColorsManager.primaryGridColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
-                              ),
-                              bottomRight: Radius.circular(
-                                deviceInfo.screenWidth * 0.1,
-                              ),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors:
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? [
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.8),
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.5),
-                                      ]
-                                      : [
-                                        Colors.blue.shade600,
-                                        Colors.blue.shade300,
-                                      ],
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.03,
-                                right:
-                                    locale == 'en'
-                                        ? deviceInfo.screenWidth * 0.01
-                                        : deviceInfo.screenWidth * 0.835,
-                                child: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          context
-                                              .read<LocalizationCubit>()
-                                              .state
-                                              .locale
-                                              .languageCode
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface
-                                                    : Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize:
-                                                deviceInfo.screenWidth * 0.036,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed:
-                                              () =>
-                                                  context
-                                                      .read<LocalizationCubit>()
-                                                      .toggleLocale(),
-                                          icon: Icon(
-                                            Icons.language,
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Theme.of(
-                                                      context,
-                                                    ).colorScheme.onSurface
-                                                    : Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Title: "Sign In"
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                left:
-                                    locale == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.46,
-                                child: Text(
-                                  context.tr('sign in'),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.08,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              // Subtitle: "Welcome Back to Sign Wave"
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.2,
-                                left:
-                                    locale == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.35,
-                                child: Text(
-                                  context.tr('Welcome Back to Sign Wave'),
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface
-                                            : Colors.white,
-                                    fontSize: deviceInfo.screenWidth * 0.05,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-
-                              // "Sign Up" Button
-                              Positioned(
-                                top: deviceInfo.screenHeight * 0.1,
-                                right:
-                                    locale == 'en'
-                                        ? deviceInfo.screenWidth * 0.05
-                                        : deviceInfo.screenWidth * 0.58,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    getIt<AppRouter>().pushReplacement(
-                                      const SignupScreen(),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Theme.of(
-                                              context,
-                                            ).colorScheme.surface
-                                            : Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        deviceInfo.screenWidth * 0.05,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: deviceInfo.screenWidth * 0.05,
-                                      vertical: deviceInfo.screenHeight * 0.01,
-                                    ),
-                                    child: Text(
-                                      context.tr('sign up'),
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.white
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .primary
-                                                    .withOpacity(0.8),
-                                        fontSize: deviceInfo.screenWidth * 0.04,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text(
+                        'Chat',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 32),
+                      CustomTextField(
+                        controller: emailController,
+                        hintText: 'Username',
+                        focusNode: _emailFocus,
+                        validator: _validateEmail,
+                      ),
+                      const SizedBox(height: 16),
+                      CustomTextField(
+                        controller: passwordController,
+                        focusNode: _passwordFocus,
+                        validator: _validatePassword,
+                        hintText: 'Password',
+                        obscureText: !_isPasswordVisible,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
-
-                        // Form Fields
-                        SizedBox(height: deviceInfo.screenHeight * 0.05),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.05,
-                            deviceInfo.screenWidth * 0.01,
-                          ),
-                          child: Column(
-                            children: [
-                              CustomTextField(
-                                controller: emailController,
-                                hintText: context.tr('email'),
-                                focusNode: _emailFocus,
-                                validator: _validateEmail,
-                                prefixIcon: const Icon(Icons.email_outlined),
+                      ),
+                      const SizedBox(height: 24),
+                      CustomButton(
+                        onPressed: () => handleSignIn(deviceInfo, context),
+                        text: 'Login',
+                        child: BlocBuilder<AuthCubit, AuthState>(
+                          bloc: getIt<AuthCubit>(),
+                          builder: (context, state) {
+                            if (state.status == AuthStatus.loading) {
+                              return CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              );
+                            }
+                            return Text(
+                              'Login',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.03),
-                              // Add this after the password field and before the login button
-                              CustomTextField(
-                                controller: passwordController,
-                                focusNode: _passwordFocus,
-                                validator: _validatePassword,
-                                hintText: context.tr('password'),
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                obscureText: !_isPasswordVisible,
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    getIt<AppRouter>().pushReplacement(
-                                      const ForgotPasswordScreen(),
-                                    );
-                                  },
-                                  child: Text(
-                                    context.tr('forgot password?'),
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.1),
-                              CustomButton(
-                                onPressed:
-                                    () => handleSignIn(deviceInfo, context),
-                                text: context.tr('login'),
-                                child:
-                                    state.status == AuthStatus.loading
-                                        ? const CircularProgressIndicator(
-                                          color: Colors.white,
-                                        )
-                                        : Text(
-                                          context.tr('login'),
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                              ),
-                              SizedBox(height: deviceInfo.screenHeight * 0.02),
-                              Center(
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: context.tr("don't have an account?"),
-
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.grey[400]
-                                              : Colors.grey[600],
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                        text: context.tr('sign up'),
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                          color:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        recognizer:
-                                            TapGestureRecognizer()
-                                              ..onTap = () {
-                                                getIt<AppRouter>().push(
-                                                  const SignupScreen(),
-                                                );
-                                              },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // MaterialButton(
-                              //   onPressed: () async {
-                              //     await sendNotification(
-                              //       body: "hi T3mia",
-                              //       title: "Abdullah Ahmed",
-                              //       token: getIt<String>(
-                              //         instanceName: 'firebaseToken',
-                              //       ),
-                              //       data: {
-                              //         "title": "Hello World",
-                              //         "body": "Hi Abdullah",
-                              //       },
-                              //     );
-                              //   },
-                              //   child: Text("Send Notification"),
-                              // ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              getIt<AppRouter>().pushReplacement(
+                                const ForgotPasswordScreen(),
+                              );
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 24),
+                          GestureDetector(
+                            onTap: () {
+                              getIt<AppRouter>().pushReplacement(
+                                const SignupScreen(),
+                              );
+                            },
+                            child: Text(
+                              'Sign Up',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 }
