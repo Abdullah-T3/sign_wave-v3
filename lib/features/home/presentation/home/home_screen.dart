@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/ui_component/info_widget.dart';
 import 'package:sign_wave_v3/core/localization/app_localizations.dart';
-import 'package:sign_wave_v3/core/theming/styles.dart';
 import 'package:sign_wave_v3/features/home/presentation/about/about_screen.dart';
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
 import 'package:animations/animations.dart';
@@ -16,6 +15,7 @@ import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';
 import '../translator/translator_screen.dart';
 import '../profile/profile_screen.dart';
+import '../../../../core/common/call_status_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Text(
-                    context.tr('contacts'),
+                    'All Users',
                     style: TextStyle(
                       fontSize: deviceInfo.screenWidth * 0.02,
                       fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: FutureBuilder<List<Map<String, dynamic>>>(
-                      future: _contactRepository.getRegisteredContacts(),
+                      future: _contactRepository.getAllRegisteredUsers(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Center(
@@ -67,32 +67,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Center(
-                            child: Text(context.tr('No_contacts_found')),
+                            child: Text(context.tr('No_users_found')),
                           );
                         }
-                        final contacts = snapshot.data!;
+                        final users = snapshot.data!;
                         return ListView.builder(
-                          itemCount: contacts.length,
+                          itemCount: users.length,
                           itemBuilder: (context, index) {
-                            final contact = contacts[index];
-                            final contactName = contact["name"] ?? "Unknown";
-                            final contactInitial =
-                                contactName.isNotEmpty
-                                    ? contactName[0].toUpperCase()
+                            final user = users[index];
+                            final userName = user["name"] ?? "Unknown";
+                            final username = user["username"] ?? "";
+                            final userInitial =
+                                userName.isNotEmpty
+                                    ? userName[0].toUpperCase()
                                     : "U";
                             return ListTile(
                               leading: CircleAvatar(
                                 backgroundColor: Theme.of(
                                   context,
                                 ).primaryColor.withOpacity(0.1),
-                                child: Text(contactInitial),
+                                child: Text(userInitial),
                               ),
-                              title: Text(contactName),
+                              title: Text(userName),
+                              subtitle:
+                                  username.isNotEmpty
+                                      ? Text("@$username")
+                                      : null,
                               onTap: () {
                                 getIt<AppRouter>().push(
                                   ChatMessageScreen(
-                                    receiverId: contact['id'],
-                                    receiverName: contact['name'],
+                                    receiverId: user['id'],
+                                    receiverName: user['name'],
                                   ),
                                 );
                               },
@@ -118,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
           stream: _chatRepository.getChatRooms(_currentUserId),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(child: Text("error:${snapshot.error}"));
             }
             if (!snapshot.hasData) {
@@ -139,7 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     final otherUserId = chat.participants.firstWhere(
                       (id) => id != _currentUserId,
                     );
-                    print("home screen current user id $_currentUserId");
                     final otherUserName =
                         chat.participantsName?[otherUserId] ??
                         context.tr('unknownUser');
@@ -186,70 +189,289 @@ class _HomeScreenState extends State<HomeScreen> {
       child: InfoWidget(
         builder: (context, deviceInfo) {
           return Scaffold(
-            appBar: AppBar(
-              backgroundColor: const Color(0xFF135CAF),
-              toolbarHeight: deviceInfo.screenHeight * 0.08,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(deviceInfo.screenWidth * 0.05),
-                  bottomRight: Radius.circular(deviceInfo.screenWidth * 0.05),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    Theme.of(context).colorScheme.background,
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.05),
+                  ],
                 ),
               ),
-              leading: Image.asset("assets/images/logo.png"),
-              leadingWidth: deviceInfo.screenWidth * 0.2,
-              title: Text(
-                _getAppBarTitle(context),
-                style: TextStyles.title.copyWith(
-                  fontSize: deviceInfo.screenWidth * 0.05,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                children: [
+                  // Modern App Bar
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.8),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(
+                          deviceInfo.screenWidth * 0.05,
+                        ),
+                        bottomRight: Radius.circular(
+                          deviceInfo.screenWidth * 0.05,
+                        ),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: deviceInfo.screenWidth * 0.04,
+                          vertical: deviceInfo.screenHeight * 0.02,
+                        ),
+                        child: Row(
+                          children: [
+                            // App Logo
+                            Container(
+                              height: deviceInfo.screenHeight * 0.06,
+                              width: deviceInfo.screenHeight * 0.06,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  "assets/images/logo.png",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: deviceInfo.screenWidth * 0.03),
+                            // App Title
+                            Expanded(
+                              child: Text(
+                                _getAppBarTitle(context),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: deviceInfo.screenWidth * 0.05,
+                                ),
+                              ),
+                            ),
+                            // Status Indicator
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.green,
+                                size: deviceInfo.screenWidth * 0.03,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Body Content
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const CallStatusWidget(),
+                        Expanded(
+                          child: PageTransitionSwitcher(
+                            transitionBuilder: (
+                              child,
+                              primaryAnimation,
+                              secondaryAnimation,
+                            ) {
+                              return FadeThroughTransition(
+                                animation: primaryAnimation,
+                                secondaryAnimation: secondaryAnimation,
+                                child: child,
+                              );
+                            },
+                            child: _getBody(deviceInfo),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            body: PageTransitionSwitcher(
-              transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
-                return FadeThroughTransition(
-                  animation: primaryAnimation,
-                  secondaryAnimation: secondaryAnimation,
-                  child: child,
-                );
-              },
-              child: _getBody(deviceInfo),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: context.tr('chats'),
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.surface,
+                    Theme.of(context).colorScheme.surface.withOpacity(0.95),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.translate),
-                  label: context.tr('translator'),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: BottomNavigationBar(
+                currentIndex: _selectedIndex,
+                onTap: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                unselectedItemColor: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withOpacity(0.6),
+                selectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: context.tr('profile'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.info),
-                  label: context.tr('about'),
-                ),
-              ],
-              selectedItemColor: Colors.blue,
-              unselectedItemColor: Colors.grey,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:
+                            _selectedIndex == 0
+                                ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1)
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        _selectedIndex == 0
+                            ? Icons.chat_bubble
+                            : Icons.chat_bubble_outline,
+                        size: 24,
+                      ),
+                    ),
+                    label: context.tr('chats'),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:
+                            _selectedIndex == 1
+                                ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1)
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        _selectedIndex == 1
+                            ? Icons.translate
+                            : Icons.translate_outlined,
+                        size: 24,
+                      ),
+                    ),
+                    label: context.tr('translator'),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:
+                            _selectedIndex == 2
+                                ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1)
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        _selectedIndex == 2
+                            ? Icons.person
+                            : Icons.person_outline,
+                        size: 24,
+                      ),
+                    ),
+                    label: context.tr('profile'),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color:
+                            _selectedIndex == 3
+                                ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1)
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        _selectedIndex == 3 ? Icons.info : Icons.info_outline,
+                        size: 24,
+                      ),
+                    ),
+                    label: context.tr('about'),
+                  ),
+                ],
+              ),
             ),
             floatingActionButton:
                 _selectedIndex == 0
-                    ? FloatingActionButton(
-                      onPressed: () => _showContactsList(context),
-                      child: const Icon(Icons.chat, color: Colors.white),
+                    ? Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.primary,
+                            Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: FloatingActionButton(
+                        onPressed: () => _showContactsList(context),
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        child: const Icon(
+                          Icons.add_comment,
+                          color: Colors.white,
+                        ),
+                      ),
                     )
                     : null,
           );

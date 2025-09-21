@@ -13,9 +13,8 @@ class FcmService {
   static Future<void> firebaseMessagingBackgroundHandler(
     RemoteMessage message,
   ) async {
-    print('Handling a background message: ${message.messageId}');
     NotificationService().showNotification(
-      title: '${message.notification!.title.toString()}',
+      title: message.notification!.title.toString(),
       body: '${message.notification!.body}',
     );
   }
@@ -23,10 +22,8 @@ class FcmService {
   static void onForgroundMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
-        print('Message received: ${message.notification!.title}');
-        print('Message body: ${message.notification!.body}');
         NotificationService().showNotification(
-          title: '${message.notification!.title.toString()}',
+          title: message.notification!.title.toString(),
           body: '${message.notification!.body}',
         );
       }
@@ -67,7 +64,6 @@ Future<void> sendNotification({
   required Map<String, String> data,
 }) async {
   if (token.isEmpty) {
-    print('Error: FCM token is empty.');
     return;
   }
   token = token.trim();
@@ -77,7 +73,7 @@ Future<void> sendNotification({
   final String fcmUrl =
       'https://fcm.googleapis.com/v1/projects/$projectId/messages:send';
   try {
-    final response = await dio.post(
+    await dio.post(
       fcmUrl,
       options: Options(
         headers: {
@@ -87,7 +83,7 @@ Future<void> sendNotification({
       ),
       data: {
         'message': {
-          'token': "s;lajdlasdasnsfa;asf",
+          'token': token,
           'notification': {'title': title, 'body': body},
           'data': data,
           'android': {
@@ -105,14 +101,6 @@ Future<void> sendNotification({
       },
     );
   } catch (e) {
-    if (e is DioException) {
-      print(
-        'FCM Error: ${e.response?.statusCode} - ${e.response?.statusMessage}',
-      );
-      print('FCM Error Details: ${e.response?.data}');
-    } else {
-      print('Unexpected error: $e');
-    }
     rethrow;
   }
 }

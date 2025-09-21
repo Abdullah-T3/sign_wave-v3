@@ -131,6 +131,83 @@ class AppLocalizations {
       'online': 'Online',
       'last_seen_at': 'last seen at',
       'type_a_message': 'Type a message',
+      'welcome_back': 'Welcome Back!',
+      'sign_in_to_continue': 'Sign in to continue to your account',
+      'email_address': 'Email Address',
+      'full_name': 'Full Name',
+      'phone_number': 'Phone Number',
+      'dont_worry_reset':
+          "Don't worry! Enter your email address and we'll send you a link to reset your password.",
+      'remember_password': 'Remember your password?',
+      'join_us_journey': 'Join us and start your journey',
+      'already_have_account': "Already have an account?",
+      'dont_have_account': "Don't have an account?",
+      'login_failed': 'Login Failed',
+      'sign_up_failed': 'Sign Up Failed',
+      'email_verification_required': 'Email Verification Required',
+      'verify_email_before_signin':
+          'Please verify your email before signing in',
+      'login_success': 'Login success',
+      'account_created_successfully': 'Account Created Successfully',
+      'check_email_verify_account':
+          'Please check your email and verify your account to complete the sign up process',
+      'error_occurred_login': 'An error occurred during login',
+      'error_occurred_signup': 'An error occurred during sign up',
+      'error_occurred_reset': 'An error occurred while sending reset email',
+      'reset_email_sent': 'Reset Email Sent',
+      'check_email_reset_instructions':
+          'Please check your email for password reset instructions',
+      'please_enter_email_address': 'Please enter your email address',
+      'please_enter_valid_email_example':
+          'Please enter a valid email address (e.g., example@email.com)',
+      'OR': 'OR',
+      // Error Messages
+      'error_invalid_email': 'Please enter a valid email address',
+      'error_user_disabled':
+          'Your account has been disabled. Please contact support',
+      'error_user_not_found': 'No account found with this email address',
+      'error_wrong_password': 'Incorrect password. Please try again',
+      'error_email_already_in_use': 'An account with this email already exists',
+      'error_operation_not_allowed': 'This action is not allowed at the moment',
+      'error_weak_password':
+          'Password is too weak. Please choose a stronger password',
+      'error_network_request_failed':
+          'Network error. Please check your internet connection',
+      'error_too_many_requests':
+          'Too many failed attempts. Please wait a moment and try again',
+      'error_invalid_credential':
+          'Invalid login credentials. Please check your email and password',
+      'error_account_exists_different_credential':
+          'An account with this email exists but uses different sign-in method',
+      'error_invalid_verification_code': 'Invalid verification code',
+      'error_invalid_verification_id': 'Invalid verification ID',
+      'error_invalid_action_code': 'Invalid action code',
+      'error_invalid_continue_uri': 'Invalid continue URI',
+      'error_invalid_dynamic_link_domain': 'Invalid dynamic link domain',
+      'error_general': 'Something went wrong. Please try again',
+      'error_signup_failed': 'Failed to create account. Please try again',
+      'error_signin_failed': 'Failed to sign in. Please check your credentials',
+      'error_signout_failed': 'Failed to sign out. Please try again',
+      'error_password_reset_failed': 'Failed to send password reset email',
+      'error_user_data_not_found':
+          'User data not found. Please contact support',
+      'error_email_already_exists': 'An account with this email already exists',
+      'error_phone_already_exists':
+          'An account with this phone number already exists',
+      'error_username_already_exists': 'This username is already taken',
+      'error_save_user_data_failed':
+          'Failed to save user data. Please try again',
+      'error_update_user_data_failed':
+          'Failed to update user data. Please try again',
+      'error_delete_account_failed':
+          'Failed to delete account. Please try again',
+      'error_delete_user_data_failed':
+          'Failed to delete user data. Please try again',
+      'error_no_user_signed_in': 'No user is currently signed in',
+      'error_email_not_verified':
+          'Please verify your email address before signing in',
+      'error_verification_email_sent':
+          'Verification email has been sent to your inbox',
     },
     'ar': {
       "app_version": "1.0.0 نسخة التطبيق",
@@ -235,6 +312,82 @@ class AppLocalizations {
       'online': 'متصل',
       'last_seen_at': 'آخر ظهور في',
       'type_a_message': 'اكتب رسالة',
+      'welcome_back': 'مرحبًا بعودتك!',
+      'sign_in_to_continue': 'سجل الدخول للمتابعة إلى حسابك',
+      'email_address': 'عنوان البريد الإلكتروني',
+      'full_name': 'الاسم الكامل',
+      'phone_number': 'رقم الهاتف',
+      'dont_worry_reset':
+          'لا تقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك رابط لإعادة تعيين كلمة المرور.',
+      'remember_password': 'هل تتذكر كلمة المرور؟',
+      'join_us_journey': 'انضم إلينا وابدأ رحلتك',
+      'already_have_account': 'هل لديك حساب بالفعل؟',
+      'dont_have_account': 'ليس لديك حساب؟',
+      'login_failed': 'فشل تسجيل الدخول',
+      'sign_up_failed': 'فشل إنشاء الحساب',
+      'email_verification_required': 'التحقق من البريد الإلكتروني مطلوب',
+      'verify_email_before_signin':
+          'يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول',
+      'login_success': 'تم تسجيل الدخول بنجاح',
+      'account_created_successfully': 'تم إنشاء الحساب بنجاح',
+      'check_email_verify_account':
+          'يرجى التحقق من بريدك الإلكتروني والتحقق من حسابك لإكمال عملية التسجيل',
+      'error_occurred_login': 'حدث خطأ أثناء تسجيل الدخول',
+      'error_occurred_signup': 'حدث خطأ أثناء إنشاء الحساب',
+      'error_occurred_reset': 'حدث خطأ أثناء إرسال بريد إعادة التعيين',
+      'reset_email_sent': 'تم إرسال بريد إعادة التعيين',
+      'check_email_reset_instructions':
+          'يرجى التحقق من بريدك الإلكتروني للحصول على تعليمات إعادة تعيين كلمة المرور',
+      'please_enter_email_address': 'يرجى إدخال عنوان بريدك الإلكتروني',
+      'please_enter_valid_email_example':
+          'يرجى إدخال عنوان بريد إلكتروني صالح (مثال: example@email.com)',
+      'OR': 'أو',
+      // Error Messages
+      'error_invalid_email': 'يرجى إدخال عنوان بريد إلكتروني صالح',
+      'error_user_disabled': 'تم تعطيل حسابك. يرجى الاتصال بالدعم',
+      'error_user_not_found': 'لم يتم العثور على حساب بهذا البريد الإلكتروني',
+      'error_wrong_password': 'كلمة مرور غير صحيحة. يرجى المحاولة مرة أخرى',
+      'error_email_already_in_use': 'يوجد حساب بهذا البريد الإلكتروني بالفعل',
+      'error_operation_not_allowed': 'هذا الإجراء غير مسموح في الوقت الحالي',
+      'error_weak_password':
+          'كلمة المرور ضعيفة جداً. يرجى اختيار كلمة مرور أقوى',
+      'error_network_request_failed':
+          'خطأ في الشبكة. يرجى التحقق من اتصال الإنترنت',
+      'error_too_many_requests':
+          'محاولات فاشلة كثيرة. يرجى الانتظار قليلاً والمحاولة مرة أخرى',
+      'error_invalid_credential':
+          'بيانات تسجيل الدخول غير صحيحة. يرجى التحقق من البريد الإلكتروني وكلمة المرور',
+      'error_account_exists_different_credential':
+          'يوجد حساب بهذا البريد الإلكتروني ولكن يستخدم طريقة تسجيل دخول مختلفة',
+      'error_invalid_verification_code': 'رمز التحقق غير صحيح',
+      'error_invalid_verification_id': 'معرف التحقق غير صحيح',
+      'error_invalid_action_code': 'رمز الإجراء غير صحيح',
+      'error_invalid_continue_uri': 'رابط المتابعة غير صحيح',
+      'error_invalid_dynamic_link_domain': 'نطاق الرابط الديناميكي غير صحيح',
+      'error_general': 'حدث خطأ ما. يرجى المحاولة مرة أخرى',
+      'error_signup_failed': 'فشل في إنشاء الحساب. يرجى المحاولة مرة أخرى',
+      'error_signin_failed': 'فشل في تسجيل الدخول. يرجى التحقق من بياناتك',
+      'error_signout_failed': 'فشل في تسجيل الخروج. يرجى المحاولة مرة أخرى',
+      'error_password_reset_failed':
+          'فشل في إرسال بريد إعادة تعيين كلمة المرور',
+      'error_user_data_not_found':
+          'لم يتم العثور على بيانات المستخدم. يرجى الاتصال بالدعم',
+      'error_email_already_exists': 'يوجد حساب بهذا البريد الإلكتروني بالفعل',
+      'error_phone_already_exists': 'يوجد حساب بهذا رقم الهاتف بالفعل',
+      'error_username_already_exists': 'اسم المستخدم هذا مستخدم بالفعل',
+      'error_save_user_data_failed':
+          'فشل في حفظ بيانات المستخدم. يرجى المحاولة مرة أخرى',
+      'error_update_user_data_failed':
+          'فشل في تحديث بيانات المستخدم. يرجى المحاولة مرة أخرى',
+      'error_delete_account_failed':
+          'فشل في حذف الحساب. يرجى المحاولة مرة أخرى',
+      'error_delete_user_data_failed':
+          'فشل في حذف بيانات المستخدم. يرجى المحاولة مرة أخرى',
+      'error_no_user_signed_in': 'لا يوجد مستخدم مسجل الدخول حالياً',
+      'error_email_not_verified':
+          'يرجى التحقق من عنوان بريدك الإلكتروني قبل تسجيل الدخول',
+      'error_verification_email_sent':
+          'تم إرسال بريد التحقق إلى صندوق الوارد الخاص بك',
     },
   };
 

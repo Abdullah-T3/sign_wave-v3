@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 class ValidatorHelper {
   static String? isNotEmpty(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -17,13 +19,11 @@ class ValidatorHelper {
   }
 
   static String? isValidPassword(String? value) {
-
     if (value!.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
   }
-
 
   static String? isPasswordConfirmed(String? password, String? retypePassword) {
     if (retypePassword == null || retypePassword.isEmpty) {
@@ -35,9 +35,10 @@ class ValidatorHelper {
     return null;
   }
 
-
   static String? isValidPhone(String? value) {
-    if (value == null || value.isEmpty) return null; // Let isNotEmpty handle this
+    if (value == null || value.isEmpty) {
+      return null; // Let isNotEmpty handle this
+    }
 
     // Regular expression to match:
     // - Starts with 010, 011, 012, or 015
@@ -48,8 +49,9 @@ class ValidatorHelper {
     return null;
   }
 
-
-  static String? Function(String?) combineValidators(List<String? Function(String?)> validators) {
+  static String? Function(String?) combineValidators(
+    List<String? Function(String?)> validators,
+  ) {
     return (String? value) {
       for (var validator in validators) {
         final result = validator(value);

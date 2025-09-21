@@ -13,10 +13,8 @@ class ContactRepository extends BaseRepository {
 
   Future<List<Map<String, dynamic>>> getRegisteredContacts() async {
     try {
-      print('Getting registered contacts');
       bool hasPermission = await requestContactsPermission();
       if (!hasPermission) {
-        print('Contacts permission denied');
         return [];
       }
 
@@ -39,7 +37,6 @@ class ContactRepository extends BaseRepository {
                 },
               )
               .toList();
-      print('Phone numbers: ${phoneNumbers}');
       final usersSnapshot = await firestore.collection('users').get();
 
       final registeredUsers =
@@ -53,7 +50,6 @@ class ContactRepository extends BaseRepository {
                 String phoneNumber = formatEgyptianPhoneNumber(
                   contact["phoneNumber"].toString(),
                 );
-                print('Phone number: $phoneNumber');
                 return registeredUsers.any(
                   (user) =>
                       user.phoneNumber == phoneNumber &&
@@ -68,9 +64,7 @@ class ContactRepository extends BaseRepository {
                 final registeredUser = registeredUsers.firstWhere(
                   (user) => user.phoneNumber == phoneNumber,
                 );
-                print(
-                  "Registered user: ${registeredUser.uid} - ${registeredUser.phoneNumber}",
-                );
+
                 return {
                   'id': registeredUser.uid,
                   'name': contact['name'],
@@ -78,10 +72,33 @@ class ContactRepository extends BaseRepository {
                 };
               })
               .toList();
-      print('Matched contacts: ${matchedContacts.length}');
       return matchedContacts;
     } catch (e) {
-      print('Error getting registered contacts: $e');
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllRegisteredUsers() async {
+    try {
+      final usersSnapshot = await firestore.collection('users').get();
+
+      final allUsers =
+          usersSnapshot.docs
+              .map((doc) => UserModel.fromFirestore(doc))
+              .where((user) => user.uid != currentUserId)
+              .map(
+                (user) => {
+                  'id': user.uid,
+                  'name': user.fullName,
+                  'phoneNumber': user.phoneNumber,
+                  'username': user.username,
+                  'email': user.email,
+                },
+              )
+              .toList();
+
+      return allUsers;
+    } catch (e) {
       return [];
     }
   }

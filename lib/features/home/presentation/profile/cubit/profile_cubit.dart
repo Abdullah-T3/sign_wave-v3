@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sign_wave_v3/core/Responsive/Models/device_info.dart';
 import 'package:sign_wave_v3/features/auth/data/models/user_model.dart';
@@ -70,6 +69,16 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(state.copyWith(status: ProfileStatus.updating));
       await _authRepository.saveUserData(user);
       emit(state.copyWith(status: ProfileStatus.loaded, user: user));
+    } catch (e) {
+      emit(state.copyWith(status: ProfileStatus.error, error: e.toString()));
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      emit(state.copyWith(status: ProfileStatus.updating));
+      await _authRepository.deleteAccount();
+      emit(state.copyWith(status: ProfileStatus.loaded));
     } catch (e) {
       emit(state.copyWith(status: ProfileStatus.error, error: e.toString()));
     }

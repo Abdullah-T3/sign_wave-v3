@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDKt0Z6Yx1toHmuA9EkjlB0s-nOEqF25Ao',
-    appId: '1:1022031179507:android:026b6b80a73a6559d6d186',
+    appId: '1:1022031179507:android:d6d6a8624443b54cd6d186',
     messagingSenderId: '1022031179507',
     projectId: 'sign-language-translator-11862',
     databaseURL:
@@ -68,9 +68,9 @@ class DefaultFirebaseOptions {
         'https://sign-language-translator-11862-default-rtdb.firebaseio.com',
     storageBucket: 'sign-language-translator-11862.firebasestorage.app',
     androidClientId:
-        '1022031179507-rrrg87998sle6kdjiacd0pe8478b4989.apps.googleusercontent.com',
+        '1022031179507-d0mjq26is4dh850olekn37j4r0i6jkvt.apps.googleusercontent.com',
     iosClientId:
         '1022031179507-ufsftah59uhp8nmppki601tcclu12vtu.apps.googleusercontent.com',
-    iosBundleId: 'com.example.signWaveV3',
+    iosBundleId: 'com.abdullah_t3.sign_wave_v3',
   );
 }

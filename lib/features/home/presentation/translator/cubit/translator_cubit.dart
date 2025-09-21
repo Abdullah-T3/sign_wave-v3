@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import '../../../../../core/services/translator/model/translator_model.dart';
 import '../../../../../core/services/translator/translator_service.dart';
 
@@ -35,11 +34,6 @@ class TranslatorCubit extends Cubit<TranslatorState> {
 
   Future<void> processVideoForTranslation(XFile videoFile) async {
     try {
-      // Read video file as bytes
-      final File file = File(videoFile.path);
-      final videoData = await file.readAsBytes();
-
-      // Convert to base64 or whatever format your API expects
       final response = await _translatorService.predictGestures(videoFile.path);
       log(response.mostCommonGesture.toString());
 
@@ -50,9 +44,7 @@ class TranslatorCubit extends Cubit<TranslatorState> {
           rawPredictions: response.rawPredictions,
         ),
       );
-      print(response.predictions);
-    } catch (e, trace) {
-      print(trace.toString());
+    } catch (e) {
       emit(TranslatorError(error: 'Failed to process video: ${e.toString()}'));
     }
   }

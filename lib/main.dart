@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,12 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
-import 'package:sign_wave_v3/core/services/zegoCloud_call.dart';
+import 'package:sign_wave_v3/core/services/call_manager.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_state.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 import 'core/observer/app_life_cycle_observer.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/localization/cubit/localization_cubit.dart';
@@ -25,6 +26,7 @@ import 'theme/app_theme.dart';
 Future<void> _initializeApp() async {
   await Firebase.initializeApp();
   await setupServiceLocator();
+  await CallManager().initialize();
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -32,13 +34,8 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
-
-  ZegoUIKit().initLog().then((value) {
-    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI([
-      ZegoUIKitSignalingPlugin(),
-    ]);
-  });
+  // Preserve the splash screen until the app is ready
+  FlutterNativeSplash.preserve(widgetsBinding: WidgetsBinding.instance);
 
   await _initializeApp().timeout(
     const Duration(seconds: 5),
@@ -68,6 +65,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initializeLifecycleObserver();
+
+    // Remove the splash screen after a short delay to ensure it's visible
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      FlutterNativeSplash.remove();
+    });
   }
 
   void _initializeLifecycleObserver() {
@@ -112,16 +114,12 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: MaterialApp(
                   routes: {'/target': (context) => const HomeScreen()},
-                  title: 'Sign Wave Translator',
+                  title: 'SignWave',
                   navigatorKey: navigatorKey,
                   debugShowCheckedModeBanner: false,
-
-                  // Theme configuration
                   theme: AppTheme.lightTheme,
                   darkTheme: AppTheme.darkTheme,
                   themeMode: themeState.themeMode,
-
-                  // Localization configuration
                   locale: localizationState.locale,
                   supportedLocales: const [Locale('en'), Locale('ar')],
                   localizationsDelegates: const [
@@ -131,34 +129,21 @@ class _MyAppState extends State<MyApp> {
                     GlobalCupertinoLocalizations.delegate,
                   ],
                   builder: (BuildContext context, Widget? child) {
-                    return Stack(
-                      children: [
-                        child!,
-                        ZegoUIKitPrebuiltCallMiniOverlayPage(
-                          contextQuery: () {
-                            return navigatorKey.currentState!.context;
-                          },
-                        ),
-                      ],
-                    );
+                    return child!;
                   },
                   home: BlocBuilder<AuthCubit, AuthState>(
                     bloc: getIt<AuthCubit>(),
                     builder: (context, state) {
-                      if (state.status == AuthStatus.initial) {
-                        return const Scaffold(
-                          body: Center(child: CircularProgressIndicator()),
-                        );
-                      }
+                      log(
+                        'DEBUG: Main app BlocBuilder rebuilding - Auth state: ${state.status}, User: ${state.user?.fullName ?? "null"}',
+                      );
                       if (state.status == AuthStatus.authenticated) {
-                        try {
-                          onUserLogin(state.user!.uid, state.user!.fullName);
-                          print("User logged in: ${state.user!.uid}");
-                        } catch (e) {
-                          print("Error during user login for ZegoCloud: $e");
-                        }
+                        log(
+                          'DEBUG: ✅ AUTHENTICATED - Navigating to HomeScreen',
+                        );
                         return const HomeScreen();
                       }
+                      log('DEBUG: ❌ NOT AUTHENTICATED - Showing LoginScreen');
                       return const LoginScreen();
                     },
                   ),

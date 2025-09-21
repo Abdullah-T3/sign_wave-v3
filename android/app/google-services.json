@@ -8,12 +8,56 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1022031179507:android:d6d6a8624443b54cd6d186",
+        "android_client_info": {
+          "package_name": "com.abdullah_t3.sign_wave_v3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022031179507-avqkmaqbtnbr0i2g5ed687ku1tl70fg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKt0Z6Yx1toHmuA9EkjlB0s-nOEqF25Ao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022031179507-avqkmaqbtnbr0i2g5ed687ku1tl70fg2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1022031179507-47vtm425cmuktt3959hbdl1usjqop50i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.realtimeSignLanguagesTranslator"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1022031179507:android:026b6b80a73a6559d6d186",
         "android_client_info": {
           "package_name": "com.example.sign_wave_v3"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1022031179507-d0mjq26is4dh850olekn37j4r0i6jkvt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sign_wave_v3",
+            "certificate_hash": "ddb6a78f22c85c0a95c6a6cf67f513590c8bec8f"
+          }
+        },
         {
           "client_id": "1022031179507-avqkmaqbtnbr0i2g5ed687ku1tl70fg2.apps.googleusercontent.com",
           "client_type": 3

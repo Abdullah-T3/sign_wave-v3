@@ -6,9 +6,9 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sign_wave_v3"
+    namespace = "com.abdullah_t3.sign_wave_v3"
     compileSdk = 35
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "29.0.14033849"
 
 
     compileOptions {
@@ -21,13 +21,16 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
     defaultConfig {
-        applicationId = "com.example.sign_wave_v3"
+        applicationId = "com.abdullah_t3.sign_wave_v3"
         multiDexEnabled = true
-        minSdk = 24
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 26
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
+        ndk {
+            abiFilters.clear()
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
     }
 
     buildTypes {
@@ -57,7 +60,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
 
-    // Zego FCM dependency with explicit version
-    implementation("im.zego:zpns-fcm:2.8.0")
+
 }
 

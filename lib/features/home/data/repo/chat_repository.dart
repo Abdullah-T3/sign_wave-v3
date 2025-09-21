@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sign_wave_v3/core/services/base_repository.dart'
@@ -104,10 +106,9 @@ class ChatRepository extends BaseRepository {
       isReceiverOnline = status['isOnline'];
     });
     getFcmToken(receiverId).then((fcmToken) async {
-      final userId = await getIt<AuthRepository>().currentUser!.uid;
+      final userId = getIt<AuthRepository>().currentUser!.uid;
       final userData = await AuthRepository().getUserData(userId);
       try {
-        print("fcm token 1111 $isReceiverOnline");
         if (!isReceiverOnline &&
             formatTimeAgo(userData.lastSeen.toString()) != 'just now') {
           sendNotification(
@@ -150,7 +151,6 @@ class ChatRepository extends BaseRepository {
         .orderBy('timestamp', descending: true)
         .startAfterDocument(lastDocument)
         .limit(20);
-    print("comingg");
     final snapshot = await query.get();
     return snapshot.docs.map((doc) => ChatMessage.fromFirestore(doc)).toList();
   }
@@ -187,7 +187,6 @@ class ChatRepository extends BaseRepository {
               .where("receiverId", isEqualTo: userId)
               .where('status', isEqualTo: MessageStatus.sent.toString())
               .get();
-      print("found ${unreadMessages.docs.length} unread messages");
 
       for (final doc in unreadMessages.docs) {
         batch.update(doc.reference, {
@@ -196,8 +195,6 @@ class ChatRepository extends BaseRepository {
         });
 
         await batch.commit();
-
-        print("Marked messaegs as read for user $userId");
       }
     } catch (e) {}
   }
@@ -248,16 +245,13 @@ class ChatRepository extends BaseRepository {
     try {
       final doc = await _chatRooms.doc(chatRoomId).get();
       if (!doc.exists) {
-        print("chat room does not exist");
         return;
       }
       await _chatRooms.doc(chatRoomId).update({
         'isTyping': isTyping,
         'typingUserId': isTyping ? userId : null,
       });
-    } catch (e) {
-      print("error updating typing status");
-    }
+    } catch (e) {}
   }
 
   Stream<Map<String, dynamic>> getTypingStatus(String chatRoomId) {

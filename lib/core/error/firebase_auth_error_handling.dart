@@ -1,46 +1,88 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import '../localization/app_localizations.dart';
 
 class FirebaseAuthErrorHandler {
-  static String handleError(FirebaseAuthException error) {
+  static String handleError(FirebaseAuthException error, BuildContext context) {
     switch (error.code) {
       case 'invalid-email':
-        return 'The email address is badly formatted.';
+        return context.tr('error_invalid_email');
       case 'user-disabled':
-        return 'The user account has been disabled.';
+        return context.tr('error_user_disabled');
       case 'user-not-found':
-        return 'No user found with this email.';
+        return context.tr('error_user_not_found');
       case 'wrong-password':
-        return 'The password is invalid.';
+        return context.tr('error_wrong_password');
       case 'email-already-in-use':
-        return 'The email address is already in use by another account.';
+        return context.tr('error_email_already_in_use');
       case 'operation-not-allowed':
-        return 'This operation is not allowed.';
+        return context.tr('error_operation_not_allowed');
       case 'weak-password':
-        return 'The password is too weak.';
+        return context.tr('error_weak_password');
       case 'network-request-failed':
-        return 'Network error. Please check your connection.';
+        return context.tr('error_network_request_failed');
       case 'too-many-requests':
-        return 'Too many unsuccessful login attempts. Please try again later.';
+        return context.tr('error_too_many_requests');
       case 'invalid-credential':
-        return 'The credential is malformed or has expired.';
+        return context.tr('error_invalid_credential');
       case 'account-exists-with-different-credential':
-        return 'An account already exists with the same email address but different sign-in credentials.';
+        return context.tr('error_account_exists_different_credential');
       case 'invalid-verification-code':
-        return 'The verification code is invalid.';
+        return context.tr('error_invalid_verification_code');
       case 'invalid-verification-id':
-        return 'The verification ID is invalid.';
+        return context.tr('error_invalid_verification_id');
       case 'invalid-action-code':
-        return 'The action code is invalid.';
+        return context.tr('error_invalid_action_code');
       case 'invalid-continue-uri':
-        return 'The continue URI is invalid.';
+        return context.tr('error_invalid_continue_uri');
       case 'invalid-dynamic-link-domain':
-        return 'The dynamic link domain is invalid.';
+        return context.tr('error_invalid_dynamic_link_domain');
       default:
-        return 'An error occurred: ${error.message}';
+        return context.tr('error_general');
     }
   }
 
-  static String handleGeneralError(Exception error) {
-    return 'An unexpected error occurred: ${error.toString()}';
+  static String handleGeneralError(Exception error, BuildContext context) {
+    return context.tr('error_general');
+  }
+
+  // Helper method to get localized error message without context
+  static String getLocalizedErrorKey(FirebaseAuthException error) {
+    switch (error.code) {
+      case 'invalid-email':
+        return 'error_invalid_email';
+      case 'user-disabled':
+        return 'error_user_disabled';
+      case 'user-not-found':
+        return 'error_user_not_found';
+      case 'wrong-password':
+        return 'error_wrong_password';
+      case 'email-already-in-use':
+        return 'error_email_already_in_use';
+      case 'operation-not-allowed':
+        return 'error_operation_not_allowed';
+      case 'weak-password':
+        return 'error_weak_password';
+      case 'network-request-failed':
+        return 'error_network_request_failed';
+      case 'too-many-requests':
+        return 'error_too_many_requests';
+      case 'invalid-credential':
+        return 'error_invalid_credential';
+      case 'account-exists-with-different-credential':
+        return 'error_account_exists_different_credential';
+      case 'invalid-verification-code':
+        return 'error_invalid_verification_code';
+      case 'invalid-verification-id':
+        return 'error_invalid_verification_id';
+      case 'invalid-action-code':
+        return 'error_invalid_action_code';
+      case 'invalid-continue-uri':
+        return 'error_invalid_continue_uri';
+      case 'invalid-dynamic-link-domain':
+        return 'error_invalid_dynamic_link_domain';
+      default:
+        return 'error_general';
+    }
   }
 }

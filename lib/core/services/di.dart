@@ -23,10 +23,10 @@ import '../theme/cubit/theme_cubit.dart' show ThemeCubit;
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await _firebaseMessaging.setForegroundNotificationPresentationOptions();
+  await firebaseMessaging.setForegroundNotificationPresentationOptions();
   await NotificationService().initNotification();
   Dio dio = Dio();
   final prefs = await SharedPreferences.getInstance();
@@ -36,9 +36,7 @@ Future<void> setupServiceLocator() async {
   );
   FcmService.onForgroundMessage();
 
-  final fcmToken = await _firebaseMessaging.getToken();
-
-  print("FCM Token: $fcmToken");
+  final fcmToken = await firebaseMessaging.getToken();
 
   getIt.registerSingleton<ThemeCubit>(ThemeCubit(prefs: prefs));
   getIt.registerSingleton<LocalizationCubit>(LocalizationCubit(prefs: prefs));
@@ -48,7 +46,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<FirebaseFirestore>(
     () => FirebaseFirestore.instance,
   );
-  getIt.registerLazySingleton<FirebaseMessaging>(() => _firebaseMessaging);
+  getIt.registerLazySingleton<FirebaseMessaging>(() => firebaseMessaging);
   getIt.registerLazySingleton<String>(
     instanceName: 'fcmToken',
     () => fcmToken!,
@@ -58,11 +56,11 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => ContactRepository());
   getIt.registerLazySingleton(() => ChatRepository());
   getIt.registerLazySingleton(
-    () => AuthCubit(authRepository: AuthRepository()),
+    () => AuthCubit(authRepository: getIt<AuthRepository>()),
   );
   getIt.registerFactory(
     () => ChatCubit(
-      chatRepository: ChatRepository(),
+      chatRepository: getIt<ChatRepository>(),
       userData: getIt<FirebaseAuth>().currentUser!,
     ),
   );
