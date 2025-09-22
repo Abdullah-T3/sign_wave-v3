@@ -9,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
-import 'package:sign_wave_v3/core/services/call_manager.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_state.dart';
 import 'core/observer/app_life_cycle_observer.dart';
@@ -26,7 +25,7 @@ import 'theme/app_theme.dart';
 Future<void> _initializeApp() async {
   await Firebase.initializeApp();
   await setupServiceLocator();
-  await CallManager().initialize();
+  // await CallManager().initialize();
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

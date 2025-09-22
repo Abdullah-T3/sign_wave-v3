@@ -7,9 +7,8 @@ plugins {
 
 android {
     namespace = "com.abdullah_t3.sign_wave_v3"
-    compileSdk = 35
-    ndkVersion = "29.0.14033849"
-
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,15 +19,17 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
+
     defaultConfig {
         applicationId = "com.abdullah_t3.sign_wave_v3"
-        multiDexEnabled = true
         minSdk = 26
-        targetSdk = 34
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        targetSdk = 36 
+        multiDexEnabled = true
+        versionCode = 1
+        versionName = "1.0.0"
         ndk {
             abiFilters.clear()
+            //noinspection ChromeOsAbiSupport
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
     }
@@ -44,7 +45,11 @@ android {
         }
     }
 
-
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
 }
 
 flutter {
@@ -52,14 +57,8 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
-
-    // Add dependencies for Firebase SDK for Google Analytics and FCM
-    // When using BoM, do NOT specify version for Firebase dependencies except Zego which requires explicit version
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
-
-
 }
-

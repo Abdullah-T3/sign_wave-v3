@@ -15,7 +15,6 @@ import '../widgets/chat_list_tile.dart';
 import '../../../../../router/app_router.dart';
 import '../translator/translator_screen.dart';
 import '../profile/profile_screen.dart';
-import '../../../../core/common/call_status_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -294,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        const CallStatusWidget(),
+                        // const CallStatusWidget(),
                         Expanded(
                           child: PageTransitionSwitcher(
                             transitionBuilder: (
