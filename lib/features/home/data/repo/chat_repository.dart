@@ -1,5 +1,7 @@
 // ignore_for_file: empty_catches
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sign_wave_v3/core/services/base_repository.dart'
@@ -117,6 +119,7 @@ class ChatRepository extends BaseRepository {
             title: userData.fullName.toString(),
             data: {'receiverId': receiverId, 'receiverName': receiverName},
           );
+          log("Send notification");
         }
       } catch (e) {
         debugPrint('Failed to send notification: $e');

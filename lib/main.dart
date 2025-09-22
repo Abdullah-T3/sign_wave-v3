@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sign_wave_v3/core/services/fcm_service.dart';
+import 'package:sign_wave_v3/core/services/notifcation_service.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_cubit.dart';
 import 'package:sign_wave_v3/features/auth/screens/cubit/auth_state.dart';
 import 'core/observer/app_life_cycle_observer.dart';
@@ -42,6 +43,11 @@ void main() async {
   );
   await dotenv.load(fileName: ".env");
 
+  // Initialize notification service
+  final notificationService = NotificationService();
+  await notificationService.initNotification();
+
+  // Set up FCM
   FirebaseMessaging.onBackgroundMessage(
     FcmService.firebaseMessagingBackgroundHandler,
   );
