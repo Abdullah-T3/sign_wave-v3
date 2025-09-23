@@ -45,7 +45,7 @@ class FcmService {
 Future<String> getAccessToken() async {
   // Load from a local file that is not tracked by git
   final jsonString = await rootBundle.loadString(
-    'secret/sign-language-translator-11862-75c8a47fd8d0.json',
+    'secret/sign-language-translator-11862-f7b608ff7417.json',
   );
 
   final accountCredentials = auth.ServiceAccountCredentials.fromJson(
