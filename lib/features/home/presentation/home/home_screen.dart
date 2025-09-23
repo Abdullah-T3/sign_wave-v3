@@ -7,6 +7,7 @@ import 'package:sign_wave_v3/features/home/presentation/about/about_screen.dart'
 import 'package:sign_wave_v3/features/home/presentation/chat/chat_massage_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:sign_wave_v3/features/home/presentation/profile/cubit/profile_cubit.dart';
+import '../../../../core/common/call_status_widget.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../data/repo/chat_repository.dart';
 import '../../data/repo/contact_repository.dart';
@@ -293,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        // const CallStatusWidget(),
+                        const CallStatusWidget(),
                         Expanded(
                           child: PageTransitionSwitcher(
                             transitionBuilder: (
